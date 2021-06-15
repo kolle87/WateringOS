@@ -1,0 +1,136 @@
+﻿@inherits LayoutComponentBase
+@inject Services.AccountService AccountService
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
+@inject Services.IAlertService AlertService
+@implements IDisposable
+
+<div class="page" id="main">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4" style="padding-left: 0px !important;">
+            <div class="col" style="padding-left:0px">
+                @if (ActiveAlarm)
+                {
+                    <NavLink class="nav-link" @onclick="ShowAlarms" style="color: crimson; cursor: pointer">
+                        <span class="oi oi-bell" aria-hidden="true" style="padding-right:1em"></span>@LatestAlarm
+                    </NavLink>
+                }
+            </div>
+            <ul class="nav flex-column">
+                
+                @if (!authorized)
+                {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" @onclick="Login" style="cursor:pointer">
+                            <span class="oi oi-account-login" aria-hidden="true" style="padding-right:1em"></span>Login
+                        </NavLink>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" @onclick="Logout" style="cursor:pointer">
+                            <span class="oi oi-account-logout" aria-hidden="true" style="padding-right:1em"></span>Logout
+                        </NavLink>
+                    </li>
+                }
+            </ul>
+        </div>        
+        <div class="content px-4">
+            <Alert />
+            @Body
+        </div>
+    </div>
+    <footer class="footer fixed-bottom text-muted" style="background-color:lightgray">
+        <div class="row">
+            <div class="col-6">
+                <p style="font-size:0.8em; margin: 0px 0px 0px 1em">© 2021 Michael Kollmeyer</p>
+                <p style="font-size:0.8em; margin: 0px 0px 0px 1em">Privacy</p>
+            </div>
+            <div class="col-6">
+                <table style="width: 100%">
+                    <tbody>
+                        <tr>
+                            <td style="text-align:right"><p style="font-size:0.8em; margin: 0px 0px 0px 0px">Version:</p></td>
+                            <td style="width:120px"><p style="font-size:0.8em; margin: 0px 1em 0px 0px">@Version</p></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right"><p style="font-size:0.8em; margin: 0px 0px 0px 0px">Uptime:</p></td>
+                            <td style="width:120px"><p style="font-size:0.8em; margin: 0px 1em 0px 0px">@Uptime</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </footer>
+</div>
+
+@code {
+
+    private string Fingerprint = "";
+    private bool authorized = false;
+    private bool ActiveAlarm = false;
+    private string LatestAlarm = "New Alarm Text";
+
+    [Parameter]
+    public string Version { get; set; } = "-.-.- ---";
+    [Parameter]
+    public string Uptime { get; set; } = "--d --:--:--";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(delegate { Fingerprint = AccountService.GetFingerprint(); });
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await SessionStorage.SetAsync("fingerprint", Fingerprint);
+        await SessionStorage.SetAsync("userID", this.GetHashCode().ToString());
+
+        authorized = AccountService.IsAuthorized(Fingerprint);
+
+        await Task.Run(delegate { AccountService.AccountLogin += OnUserLogin; });
+        await Task.Run(delegate { AccountService.AccountLogout += OnUserLogout; });
+    }
+
+    public void ShowAlarms()
+    {
+        //NavigationManager.NavigateTo("/auth/login?returnUrl=" + returnUrl);
+    }
+
+    public void Logout()
+    {
+        AccountService.LogOut(Fingerprint);
+        AlertService.Warn("You're logged out", keepAfterRouteChange: true);
+        NavigationManager.NavigateTo("/");
+    }
+
+    public void Login()
+    {
+        var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.NavigateTo("/auth/login?returnUrl=" + returnUrl);
+    }
+
+    public void OnUserLogin()
+    {
+        authorized = AccountService.IsAuthorized(Fingerprint);
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    public void OnUserLogout()
+    {
+        authorized = AccountService.IsAuthorized(Fingerprint);
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    void IDisposable.Dispose()
+    {
+        AccountService.AccountLogin -= OnUserLogin;
+        AccountService.AccountLogout -= OnUserLogout;
+        AccountService.Remove(Fingerprint);
+    }
+}

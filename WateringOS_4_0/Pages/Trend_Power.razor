@@ -1,0 +1,132 @@
+﻿@page "/trend_power"
+@namespace WateringOS_4_0.Pages
+
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor
+@using WateringOS_4_0.Models
+@using System.Collections.ObjectModel
+
+@inject Services.PowerService PowerService
+
+<div class="control-section" style="height:100%">
+    <div class="row" style="margin-bottom:1.5em">
+        <div class="col">
+            <h2>Power Supply</h2>
+        </div>
+        <div class="col-auto">
+            <button class=@ButtonClassWeek @onclick="ShowWeek" style="width: 100px; margin-right:20px">Week</button>
+            <button class=@ButtonClassDay @onclick="ShowDay" style="width: 100px">24hrs</button>
+        </div>
+    </div>
+    <SfChart Width="100%" Height="100%">
+
+        <ChartArea>
+            <ChartAreaBorder Width="0" />
+        </ChartArea>
+
+        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime" LabelIntersectAction="LabelIntersectAction.Rotate45" IntervalType=@AxisIntType LabelFormat=@AxisFormat Interval=@AxisInterval Minimum=@MinX MinorTicksPerInterval="3" EdgeLabelPlacement="EdgeLabelPlacement.Shift">
+            <ChartAxisMajorGridLines Width="1" Color="darkgrey" />
+            <ChartAxisMinorGridLines Width="1" Color="lightgrey" />
+        </ChartPrimaryXAxis>
+
+        <ChartPrimaryYAxis LabelFormat="{value}" RangePadding="ChartRangePadding.None" Minimum="0" Maximum="2" Interval="1" Title="Watchdog">
+            <ChartAxisMajorGridLines Width="1" Color="darkgrey" />
+            <ChartAxisMinorGridLines Width="1" Color="lightgrey" />
+        </ChartPrimaryYAxis>
+
+        <ChartRows>
+            <ChartRow Height="40%" />
+            <ChartRow Height="30%" />
+            <ChartRow Height="30%" />
+        </ChartRows>
+
+        <ChartAxes>
+            <ChartAxis Minimum="0" Maximum="2" Interval="1" OpposedPosition="false" RowIndex="2" Name="PowerAxis" LabelFormat="{value}" Title="Power Status" />
+        </ChartAxes>
+
+        <ChartCrosshairSettings Enable="true" LineType="LineType.Vertical" />
+        <ChartTooltipSettings Enable="true" Shared="true" Header="${point.x}" Format="${series.name} : ${point.y}" />
+
+        <ChartSeriesCollection>
+            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="5V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_5V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#FFFF33"><ChartSeriesBorder Width="2" Color="#CC9900" /></ChartSeries>
+            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="12V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_12V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#FF6600"><ChartSeriesBorder Width="2" Color="#993300" /></ChartSeries>
+            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="24V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_24V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#CC3333"><ChartSeriesBorder Width="2" Color="#990000" /></ChartSeries>
+            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="5V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_5V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#00FF00"><ChartSeriesBorder Width="2" Color="#006600" /></ChartSeries>
+            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="12V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_12V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#00CCFF"><ChartSeriesBorder Width="2" Color="#0033FF" /></ChartSeries>
+            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="24V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_24V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#9933FF"><ChartSeriesBorder Width="2" Color="#660099" /></ChartSeries>
+
+            <ChartSeries DataSource="@PowerService.PowerLog" Name="Watchdog Pre-Alarm" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.WatchdogPrealarm)" Opacity="0.7" Type="ChartSeriesType.Area" Fill="#CC3333"><ChartSeriesBorder Width="2" Color="#990000" /></ChartSeries>
+
+        </ChartSeriesCollection>
+
+        <ChartLegendSettings Visible="true" />
+
+    </SfChart>
+
+</div>
+
+<style>
+    .content {
+        height: calc(100% - 220px);
+    }
+
+    .e-control {
+        height: 100%;
+    }
+</style>
+
+@code{
+
+    private DateTime MinX = DateTime.Now.AddDays(-7);
+    private DateTime MaxX = DateTime.Now;
+
+    private string AxisFormat = "dd/MMM";
+    private int AxisInterval = 1;
+    private IntervalType AxisIntType = IntervalType.Days;
+
+    private string ButtonClassWeek = "btn btn-primary";
+    private string ButtonClassDay = "btn btn-outline-primary";
+
+    protected override async Task OnInitializedAsync()
+    {
+        PowerService.LoadPowerLog();
+        MinX = GetDayRounded(PowerService.PowerLog.Last().TimeStamp.AddDays(-7));
+        MaxX = GetDayEndRounded(PowerService.PowerLog.Last().TimeStamp);
+    }
+
+    private void ShowWeek()
+    {
+        MinX = GetDayRounded(PowerService.PowerLog.Last().TimeStamp.AddDays(-7));
+        AxisFormat = "dd/MMM";
+        AxisInterval = 1;
+        AxisIntType = IntervalType.Days;
+        ButtonClassWeek = "btn btn-primary";
+        ButtonClassDay = "btn btn-outline-primary";
+    }
+
+    private void ShowDay()
+    {
+        MinX = GetHourRounded(PowerService.PowerLog.Last().TimeStamp.AddHours(-24));
+        AxisFormat = "HH:mm";
+        AxisInterval = 1;
+        AxisIntType = IntervalType.Hours;
+        ButtonClassWeek = "btn btn-outline-primary";
+        ButtonClassDay = "btn btn-primary";
+    }
+
+    private DateTime GetHourRounded(DateTime TimeStamp)
+    {
+        return new DateTime(TimeStamp.Year, TimeStamp.Month, TimeStamp.Day, TimeStamp.Hour, 0, 0);
+    }
+
+    private DateTime GetDayRounded(DateTime TimeStamp)
+    {
+        return new DateTime(TimeStamp.Year, TimeStamp.Month, TimeStamp.Day, 0, 0, 0);
+    }
+
+    private DateTime GetDayEndRounded(DateTime TimeStamp)
+    {
+        return new DateTime(TimeStamp.Year, TimeStamp.Month, TimeStamp.Day, 23, 59, 59);
+    }
+
+}

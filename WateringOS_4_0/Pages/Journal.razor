@@ -1,0 +1,248 @@
+﻿@page "/journal"
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+@using System.Collections.ObjectModel;
+@using System.ComponentModel;
+@using WateringOS_4_0.Models;
+
+@inject Services.LogService LogService
+
+
+<h2 style="margin-bottom:1.2em;">Log Journal</h2>
+<div class="row">
+    <div class="col-sm-auto">
+        <h5 padding-top: 3px">Filter:</h5>
+    </div>
+    <div class="col">
+        <button class=@TypeStatus type="button" style="cursor: pointer" @onclick=FilterStatus>Status</button>
+        <button class=@TypeInfo type="button" style="cursor: pointer" @onclick=FilterInfo>Information</button>
+        <button class=@TypeWarning type="button" style="cursor: pointer" @onclick=FilterAlarm>Warning</button>
+        <button class=@TypeError type="button" style="cursor: pointer" @onclick=FilterError>Error</button>
+        <button class=@TypeFatal type="button" style="cursor: pointer" @onclick=FilterFatal>Fatal</button>
+    </div>
+</div>
+
+<div class="control-section">
+    <SfGrid @ref="journal" DataSource="@LogService.JournalLog" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
+        <GridEvents OnRecordClick="RecordClickHandler" TValue="LogModel"></GridEvents>
+        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu" />
+        <GridPageSettings PageCount="5" PageSize="15" PageSizes="new int[]{ 15, 50, 100 }" />
+        <GridSortSettings>
+            <GridSortColumns>
+                <GridSortColumn Field=@nameof(LogModel.TimeStamp) Direction="SortDirection.Descending" />
+            </GridSortColumns>
+        </GridSortSettings>
+        <GridColumns>
+            <GridColumn Field=@nameof(LogModel.TimeStamp) HeaderText="Time Stamp" Width="250" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" Type="ColumnType.DateTime" Format="dd/MMM/yyyy hh:mm:ss.fff" IsPrimaryKey="true" />
+            <GridColumn Field=@nameof(LogModel.Type) HeaderText="Type" Width="120" TextAlign="TextAlign.Center" HeaderTextAlign="TextAlign.Center" FilterSettings="@(new FilterSettings{Type = Syncfusion.Blazor.Grids.FilterType.CheckBox })">
+                <Template>
+                    @{
+                        var currentLog = (context as LogModel);
+                        switch (currentLog.Type.ToString())
+                        {
+                            case "Status":
+                                {
+                                    <span class="badge badge-secondary" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
+                                }
+                                break;
+                            case "Information":
+                                {
+                                    <span class="badge badge-info" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
+                                }
+                                break;
+                            case "Warning":
+                                {
+                                    <span class="badge badge-warning" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
+                                }
+                                break;
+                            case "Error":
+                                {
+                                    <span class="badge badge-danger" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
+                                }
+                                break;
+                            case "Fatal":
+                                {
+                                    <span class="badge badge-danger" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
+                                }
+                                break;
+                            default:
+                                {
+                                    <span class="badge badge-secondary" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
+                                }
+                                break;
+                        }
+                    }
+                </Template>
+            </GridColumn>
+            <GridColumn Field=@nameof(LogModel.App) HeaderText="Module" Width="100" TextAlign="TextAlign.Center" HeaderTextAlign="TextAlign.Center" FilterSettings="@(new FilterSettings{Type = Syncfusion.Blazor.Grids.FilterType.CheckBox })">
+                <Template>
+                    @{
+                        var currentLog = (context as LogModel);
+                        <span class="badge badge-secondary" style="padding:0.4em 1em 0.4em 1em; width:60px">@currentLog.App</span>
+                    }
+                </Template>
+            </GridColumn>
+            <GridColumn Field=@nameof(LogModel.Message) HeaderText="Message" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left">
+                <Template>
+                    @{
+                        var currentLog = (context as LogModel);
+                        Count++;
+                        <SfTooltip Target="#txt" @key="@Count" MouseTrail="true">
+                            <TooltipTemplates>
+                                <Content>
+                                    <h5>@currentLog.TimeStamp</h5>
+                                    <h6>@currentLog.Type : @currentLog.Message</h6>
+                                    <p>@currentLog.Details</p>
+                                </Content>
+                            </TooltipTemplates>
+                            <div id="txt" style="width: 100%">
+                                @currentLog.Message
+                            </div>
+
+                        </SfTooltip>
+                    }
+                </Template>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+<style>
+    .content {
+        height: calc(100% - 220px);
+    }
+
+    .btn {
+        height: 25px;
+        width: 90px;
+        padding: 0px 0px 0px 0px;
+    }
+
+    .e-grid .e-gridheader .e-sortfilter .e-fltr-icon .e-headercelldiv {
+        margin: -5px 0px -5px 0px;
+        padding-right: 5px;
+    }
+
+    .e-grid .e-icons {
+        color: #495057;
+        display: none;
+    }
+</style>
+
+@code {
+
+    private SfGrid<LogModel> journal { get; set; }
+    private int Count { get; set; } = 0;
+
+    private string TypeStatus = "btn btn-secondary btn-sm";
+    private string TypeInfo = "btn btn-info btn-sm";
+    private string TypeWarning = "btn btn-warning btn-sm";
+    private string TypeError = "btn btn-danger btn-sm";
+    private string TypeFatal = "btn btn-danger btn-sm";
+
+    private List<string> FilterList = new List<string> { "Information", "Status", "Warning", "Error", "Fatal" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        LogService.LoadJournal();
+    }
+
+    private void FilterStatus()
+    {
+        if (TypeStatus == "btn btn-secondary btn-sm")
+        {
+            TypeStatus = "btn btn-outline-secondary btn-sm";
+            FilterList.Remove("Status");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+        else
+        {
+            TypeStatus = "btn btn-secondary btn-sm";
+            FilterList.Add("Status");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+    }
+
+    private void FilterInfo()
+    {
+        if (TypeInfo == "btn btn-info btn-sm")
+        {
+            TypeInfo = "btn btn-outline-info btn-sm";
+            FilterList.Remove("Information");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+        else
+        {
+            TypeInfo = "btn btn-info btn-sm";
+            FilterList.Add("Information");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+    }
+
+    private void FilterAlarm()
+    {
+        if (TypeWarning == "btn btn-warning btn-sm")
+        {
+            TypeWarning = "btn btn-outline-warning btn-sm";
+            FilterList.Remove("Warning");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+        else
+        {
+            TypeWarning = "btn btn-warning btn-sm";
+            FilterList.Add("Warning");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+        journal.RefreshColumns();
+    }
+
+    private void FilterError()
+    {
+        if (TypeError == "btn btn-danger btn-sm")
+        {
+            TypeError = "btn btn-outline-danger btn-sm";
+            FilterList.Remove("Error");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+        else
+        {
+            TypeError = "btn btn-danger btn-sm";
+            FilterList.Add("Error");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+    }
+
+    private void FilterFatal()
+    {
+        if (TypeFatal == "btn btn-danger btn-sm")
+        {
+            TypeFatal = "btn btn-outline-danger btn-sm";
+            FilterList.Remove("Fatal");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+        else
+        {
+            TypeFatal = "btn btn-danger btn-sm";
+            FilterList.Add("Fatal");
+            journal.ClearFiltering();
+            journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
+        }
+    }
+
+    private void RecordClickHandler()
+    {
+        //
+    }
+}

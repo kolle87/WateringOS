@@ -1,0 +1,81 @@
+﻿@namespace WateringOS_4_0.Pages
+
+<div class="control-section" style="padding-left:20px">
+
+    <h5>Power Supply</h5>
+
+    <div class="row">
+        <div class="col-fixed pwr">5V:</div>
+        <div class="col-auto pwr" >
+            <div class="container pwr" id="stat_PG5" style="background-color:crimson;">
+                <span class="text" style="color:whitesmoke">Low</span>
+            </div>
+        </div>
+        <div class="col-auto pwr" style="margin-left:5px">
+            <div class="container pwr" id="stat_PF5" style="background-color:crimson;">
+                <span class="text" style="color:whitesmoke">Fail</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-fixed pwr">12V:</div>
+        <div class="col-auto pwr" >
+            <div class="container pwr" id="stat_PG12" style="background-color:crimson;">
+                <span class="text" style="color:whitesmoke">Low</span>
+            </div>
+        </div>
+        <div class="col-auto pwr" style="margin-left:5px;">
+            <div class="container pwr" id="stat_PF12" style="background-color:crimson;">
+                <span class="text" style="color:whitesmoke">Fail</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-fixed pwr">24V:</div>
+        <div class="col-auto pwr" >
+            <div class="container pwr" id="stat_PG24" style="background-color:crimson;">
+                <span class="text" style="color:whitesmoke">Low</span>
+            </div>
+        </div>
+        <div class="col-auto pwr" style="margin-left:5px;">
+            <div class="container pwr" id="stat_PG24" style="background-color:crimson;">
+                <span class="text" style="color:whitesmoke">Fail</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .col-fixed.pwr {
+        width: 100px;
+        padding-top: 5px;
+        padding-right: 18px;
+        text-align: right;
+    }
+
+    .col-auto.pwr {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .container.pwr {
+        width: 80px;
+        border-radius: 10px;
+        margin: 7px 0px 7px 0px;
+        text-align: center;
+    }
+
+</style>
+
+@code {
+    private string TempAmbText = "23 °C";
+    private string TempExpText = "27 °C";
+    private string TempPcbText = "42 °C";
+    private string TempCpuText = "47 °C";
+
+    private void SetTemperature(double Temperature)
+    {
+
+    }
+}

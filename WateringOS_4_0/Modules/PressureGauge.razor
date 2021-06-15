@@ -1,0 +1,71 @@
+﻿@namespace WateringOS_4_0.Pages
+
+@using Syncfusion.Blazor.CircularGauge
+
+<div class="control-section" id="target" style="padding-top:2em;width:100%;height:100%">
+    <SfCircularGauge Height="95%">
+        <CircularGaugeAxes>
+            <CircularGaugeAxis StartAngle="200" EndAngle="160" Minimum="0" Maximum="10" Radius="100%">
+                <CircularGaugeAxisLineStyle Width="0.01" />
+                <CircularGaugeAxisLabelStyle Position="Position.Inside" UseRangeColor="true">
+                    <CircularGaugeAxisLabelFont Size="0px" Color="transparent" />
+                </CircularGaugeAxisLabelStyle>
+                <CircularGaugeAxisMajorTicks Height="0.01" />
+                <CircularGaugeAxisMinorTicks Height="0.01" />
+                <CircularGaugeRanges>
+                    <CircularGaugeRange Start="0" End="10" Radius="100%" StartWidth="30" EndWidth="30" Color="#E0E0E0" RoundedCornerRadius="20" />
+                </CircularGaugeRanges>
+                <CircularGaugePointers>
+                    <CircularGaugePointer Value="@vPress" RoundedCornerRadius="20" Type="PointerType.RangeBar" Radius="100%" Color="@PointerColor" PointerWidth="30">
+                        <CircularGaugePointerAnimation Enable="false" />
+                        <CircularGaugePointerBorder Color="grey" Width="0.01" />
+                    </CircularGaugePointer>
+                </CircularGaugePointers>
+                <CircularGaugeAnnotations>
+                    <CircularGaugeAnnotation Radius="0%" Angle="0" ZIndex="1">
+                        <ContentTemplate>
+                            <div class="annotationText">@vPress</div>
+                            <div class="annotationSubText">bar</div>
+                        </ContentTemplate>
+                    </CircularGaugeAnnotation>
+                </CircularGaugeAnnotations>
+            </CircularGaugeAxis>
+        </CircularGaugeAxes>
+    </SfCircularGauge>
+
+    <h4 style="position:absolute; top:5px; left:20px">Pressure</h4>
+</div>
+
+<style>
+    .annotationText {
+        font-size: 1.8em;
+        width: 120px;
+        text-align: center;
+        margin-top: -30px;
+        margin-left: -55px
+    }
+
+    .annotationSubText {
+        font-size: 1.5em;
+        width: 120px;
+        text-align: center;
+        margin-top: -10px;
+        margin-left: -55px
+    }
+</style>
+
+@code {
+    private string PointerColor = "#038c9a";
+    private double vPress = 1.6;
+
+    private void SetPressure(double Pressure)
+    {
+        vPress = Pressure;
+
+        // use Min & Max Pressure
+        if (vPress <= 2) { PointerColor = "#FFCA28"; }
+        else if (vPress >= 6) { PointerColor = "#ea501a"; }
+        else { PointerColor = "#038c9a"; }
+
+    }
+}

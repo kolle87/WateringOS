@@ -1,0 +1,122 @@
+﻿@page "/trend_level"
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor
+@using WateringOS_4_0.Models
+@using System.Collections.ObjectModel
+@inject Services.LevelService LevelService
+@namespace WateringOS_4_0.Pages
+
+<div class="control-section" style="margin-bottom:50px; height:100%">
+    <div class="row" style="margin-bottom:1.5em">
+        <div class="col">
+            <h2 >Tank Level</h2>
+        </div>
+        <div class="col-auto">
+            <button class=@ButtonClassWeek @onclick="ShowWeek" style="width: 100px; margin-right:20px">Week</button>
+            <button class=@ButtonClassDay @onclick="ShowDay" style="width: 100px">24hrs</button>
+        </div>
+    </div>    
+    
+    <SfChart Width="100%" Height="100%">
+
+        <ChartArea>
+            <ChartAreaBorder Width="0" />
+        </ChartArea>
+
+        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime" IntervalType=@AxisIntType LabelFormat=@AxisFormat Interval=@AxisInterval Minimum=@MinX MinorTicksPerInterval="3" EdgeLabelPlacement="EdgeLabelPlacement.Shift">
+            <ChartAxisMajorGridLines Width="1" Color="darkgrey" />
+            <ChartAxisMinorGridLines Width="1" Color="lightgrey" />
+        </ChartPrimaryXAxis>
+
+        <ChartPrimaryYAxis LabelFormat="{value}%" RangePadding="ChartRangePadding.None" Minimum="0" Maximum="100" Interval="10" MinorTicksPerInterval="1">
+            <ChartStriplines>
+                <ChartStripline Start="0" End="5" Color="red" Opacity="0.2" />
+            </ChartStriplines>
+            <ChartAxisMajorGridLines Width="1" Color="darkgrey" />
+            <ChartAxisMinorGridLines Width="1" Color="lightgrey" />
+            <ChartAxisLineStyle Width="0" />
+            <ChartAxisMajorTickLines Width="0" />
+        </ChartPrimaryYAxis>
+
+        <ChartCrosshairSettings Enable="true" LineType="LineType.Vertical" />
+        <ChartTooltipSettings Enable="true" Shared="true" Header="${point.text}" Format="${series.name} : ${point.y}" />
+
+        <ChartSeriesCollection>
+            <ChartSeries DataSource="@LevelService.LevelLog" Name="Level" XName="@nameof(LevelModel.TimeStamp)" YName="@nameof(LevelModel.Tank)" Opacity="0.3" Type="ChartSeriesType.Area" Fill="#007bff">
+                <ChartSeriesBorder Width="2" Color="darkblue" />
+                <ChartMarker Visible="false">
+                    <ChartDataLabel Name="@nameof(LevelModel.TimeStamp)" />
+                </ChartMarker>
+            </ChartSeries>
+        </ChartSeriesCollection>
+
+        <ChartLegendSettings Visible="false" />
+
+    </SfChart>
+
+</div>
+
+<style>
+    .content {
+        height: calc(100% - 220px);
+    }
+
+    .e-control {
+        height: 100%;
+    }
+</style>
+
+@code{
+
+    private DateTime MinX = DateTime.Now.AddDays(-7);
+    private DateTime MaxX = DateTime.Now;
+
+    private string AxisFormat = "dd/MMM";
+    private int AxisInterval = 1;
+    private IntervalType AxisIntType = IntervalType.Days;
+
+    private string ButtonClassWeek = "btn btn-primary";
+    private string ButtonClassDay  = "btn btn-outline-primary";
+
+    protected override async Task OnInitializedAsync()
+    {
+        LevelService.LoadLevelLog();
+        MinX = GetDayRounded(LevelService.LevelLog.Last().TimeStamp.AddDays(-7));
+        MaxX = GetDayEndRounded(LevelService.LevelLog.Last().TimeStamp);
+    }
+
+    private void ShowWeek()
+    {
+        MinX = GetDayRounded(LevelService.LevelLog.Last().TimeStamp.AddDays(-7));
+        AxisFormat = "dd/MMM";
+        AxisInterval = 1;
+        AxisIntType = IntervalType.Days;
+        ButtonClassWeek = "btn btn-primary";
+        ButtonClassDay = "btn btn-outline-primary";
+    }
+
+    private void ShowDay()
+    {
+        MinX = GetHourRounded(LevelService.LevelLog.Last().TimeStamp.AddHours(-24));
+        AxisFormat = "HH:mm";
+        AxisInterval = 1;
+        AxisIntType = IntervalType.Hours;
+        ButtonClassWeek = "btn btn-outline-primary";
+        ButtonClassDay = "btn btn-primary";
+    }
+
+    private DateTime GetHourRounded(DateTime TimeStamp)
+    {
+        return new DateTime(TimeStamp.Year, TimeStamp.Month, TimeStamp.Day, TimeStamp.Hour, 0, 0);
+    }
+
+    private DateTime GetDayRounded(DateTime TimeStamp)
+    {
+        return new DateTime(TimeStamp.Year, TimeStamp.Month, TimeStamp.Day, 0, 0, 0);
+    }
+
+    private DateTime GetDayEndRounded(DateTime TimeStamp)
+    {
+        return new DateTime(TimeStamp.Year, TimeStamp.Month, TimeStamp.Day, 23, 59, 59);
+    }
+}

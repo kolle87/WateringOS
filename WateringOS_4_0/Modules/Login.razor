@@ -1,0 +1,72 @@
+﻿@page "/auth/login"
+
+@using System.Web
+@using Services;
+
+@inject AccountService AccountService
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
+@inject IAlertService AlertService
+
+<div class="card" style="max-width: 480px">
+    <h4 class="card-header">Login</h4>
+    <div class="card-body">
+        <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label>Password</label>
+                <InputText @bind-Value="model.Password" type="password" class="form-control" />
+                <ValidationMessage For="@(() => model.Password)" />
+            </div>
+            <button disabled="@loading" class="btn btn-primary">
+                @if (loading)
+                {
+                    <span class="spinner-border spinner-border-sm mr-1"></span>
+                }
+                Login
+            </button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    private Models.PasswordInput model = new Models.PasswordInput();
+    private bool loading = false;
+
+    private async void OnValidSubmit()
+    {
+        loading = true;
+        try
+        {
+            var fp_result = await SessionStorage.GetAsync<string>("fingerprint");
+            var id_result = await SessionStorage.GetAsync<string>("userID");
+            string fingerprint = fp_result.Value;
+            string userID = id_result.Value;
+
+            if (AccountService.LogIn(fingerprint, userID, model.Password))
+            {
+                Uri myUri = new Uri(NavigationManager.Uri);
+                string returnURL = HttpUtility.ParseQueryString(myUri.Query).Get("returnUrl");
+
+                AlertService.Success("Login successful", keepAfterRouteChange: true);
+
+                NavigationManager.NavigateTo(returnURL);
+                loading = false;
+            }
+            else
+            {
+                model.Password = null;
+                loading = false;
+                StateHasChanged();
+                AlertService.Error("Wrong Password entered", keepAfterRouteChange: true);
+            }
+        }
+        catch (Exception e)
+        {
+            loading = false;
+        }
+    }
+
+}
+

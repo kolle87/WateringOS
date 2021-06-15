@@ -1,0 +1,96 @@
+﻿@inject Services.AccountService AccountService
+@inject ProtectedSessionStorage SessionStorage
+@inject NavigationManager NavigationManager
+
+@using Syncfusion.Blazor.Navigations
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Watering OS 4.0</a>
+    <button class="navbar-toggler" @onclick=ToggleNavMenu>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class=@NavMenuCssClass @onclick=ToggleNavMenu>
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Overview
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="journal">
+                <span class="oi oi-excerpt" aria-hidden="true"></span> Journal
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="trend_level">
+                <span class="oi oi-graph" aria-hidden="true"></span> Level
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="trend_environment">
+                <span class="oi oi-graph" aria-hidden="true"></span> Environment
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="trend_power">
+                <span class="oi oi-graph" aria-hidden="true"></span> Power
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="trend_watering">
+                <span class="oi oi-graph" aria-hidden="true"></span> Watering
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-dashboard" aria-hidden="true"></span> Manual Control <span class="badge badge-secondary" style="margin-left:1em">Admin</span>
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-wrench" aria-hidden="true"></span> Setting <span class="badge badge-secondary" style="margin-left:1em">Admin</span>
+            </NavLink>
+        </li>
+        <li class="nav-item dropdown px-3">
+            <NavLink class="nav-link dropdown-toggle" role="button" @onclick=ToggleSubMenu style="cursor: pointer;">
+                <span class="oi oi-wrench" aria-hidden="true"></span> System <span class="badge badge-secondary" style="margin-left:1em">Admin</span>
+            </NavLink>
+            <div hidden=@collapseSubMenu>
+                <div class="card card-body" style="padding: 0 0 0 0; background-color: rgba(0,0,0,.125); margin-left: 3rem; ">
+                    <NavLink class="nav-link subitem" href="systemsettings">
+                        <span>System Settings</span>
+                    </NavLink>
+                    <NavLink class="nav-link" href="journal">
+                        <span>System Log</span>
+                    </NavLink>
+                    <NavLink class="nav-link" href="fetchdata">
+                        <span>Current Users</span>
+                    </NavLink>
+                    <NavLink class="nav-link" href="fetchdata">
+                        <span>Reboot System</span>
+                    </NavLink>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool collapseSubMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+        collapseSubMenu = collapseNavMenu;
+    }
+
+    private void ToggleSubMenu()
+    {
+        collapseSubMenu = !collapseSubMenu;
+    }
+}

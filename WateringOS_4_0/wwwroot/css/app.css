@@ -1,0 +1,10 @@
+﻿
+
+.sidebar {
+    background-image: linear-gradient(180deg, #038c9a 0%, #496ebf 70%) !important;
+}
+
+.content {
+    margin-bottom: 50px !important;
+    min-width: 420px !important;
+}

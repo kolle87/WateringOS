@@ -1,0 +1,60 @@
+﻿@page "/fetchdata"
+@namespace WateringOS_4_0.Pages
+
+@using System.Threading
+@inject ProtectedSessionStorage SessionStorage
+@inject Services.AccountService AccountService
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+
+<h2>User List</h2>
+<h4>Below a list of currently logged in users.</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fingerprint</th>
+            <th>HashCode</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userid in AccountService.ApprovedUsers)
+        {
+            <tr>
+                <td>@userid.Fingerprint</td>
+                <td>@userid.HashCode</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await SessionStorage.GetAsync<string>("fingerprint");
+
+        if (AccountService.IsAuthorized(result.Value))
+        {
+            Console.WriteLine("Users: {0} logged in", result.Value);
+            await Task.Run(delegate { AccountService.AccountLogin += OnUserLogin; });
+            await Task.Run(delegate { AccountService.AccountLogout += OnUserLogout; });
+        }
+        else
+        {
+            Console.WriteLine("Users: {0} needs to authenticate", result.Value);
+            var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo("/auth/login?returnUrl=" + returnUrl);
+        }
+    }
+
+    public void Dispose()
+    {
+        AccountService.AccountLogin -= OnUserLogin;
+        AccountService.AccountLogout -= OnUserLogout;
+    }
+
+    public void OnUserLogin() { InvokeAsync(() => StateHasChanged()); }
+    public void OnUserLogout() { InvokeAsync(() => StateHasChanged()); }
+}

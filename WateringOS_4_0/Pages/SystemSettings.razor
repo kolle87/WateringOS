@@ -1,0 +1,146 @@
+﻿@page "/systemsettings"
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using System.Collections.ObjectModel;
+@using System.ComponentModel;
+@using WateringOS_4_0.Models;
+
+@inject Services.SettingsService SettingsService
+
+
+<h2 style="margin-bottom:1.2em;">System Settings</h2>
+
+<div class="control-section">
+    <SfGrid DataSource="@SettingsService.Settings" AllowGrouping="true" Toolbar="@(new List<string>() { "Update", "Cancel" })">
+        <GridGroupSettings Columns=@GroupedColumns ShowDropArea="false" />
+        <GridEvents OnToolbarClick="ToolbarClickHandler" CellSaved="CellSaved" OnActionComplete="ActionComplete" TValue="SettingsModel" />
+        <GridEditSettings AllowEditing="true" Mode="EditMode.Batch" ShowConfirmDialog="false">
+            <Template>
+                @{
+                    var vItem = (context as SettingsModel);
+                    <div>
+                        <div class="form-row" style="background-color: lightyellow">
+                            <div class="e-indentcell" style="width: 35px;">
+
+                            </div>
+                            <div class="e-rowcell" style="width: 200px; padding-left: 12px">
+                                <div class="text" style="padding-left: 0px; padding-top: 7px">@vItem.Name</div>
+                            </div>
+                            <div class="form-group col-auto" style="margin: 0 0 0 0; padding-top: 5px; padding-bottom: 3px">
+                                <label class="e-float-text e-label-top">Value</label>
+                                <SfNumericTextBox ID="Value" @bind-Value="@(vItem.Value)" ShowSpinButton="true" Step="@vItem.Step" Min="@vItem.Min" Max="@vItem.Max" Width="110px" CssClass="e-small"></SfNumericTextBox>
+                            </div>
+                            <div class="e-rowcell" style="width: 71px; padding-left: 12px">
+                                <div class="text" style="padding-left: 0px; padding-top: 7px">@vItem.Unit</div>
+                            </div>
+                            <div class="e-rowcell" style="width: 93px;padding-left: 12px">
+                                <div class="text" style="padding-left: 0px; padding-top: 7px">@vItem.Default</div>
+                            </div>
+                            <div class="e-rowcell" style="width: 75px;padding-left: 12px">
+                                <div class="text" style="padding-left: 0px; padding-top: 7px">@vItem.Step</div>
+                            </div>
+                            <div class="e-rowcell" style="width: 81px;padding-left: 12px">
+                                <div class="text" style="padding-left: 0px; padding-top: 7px">@vItem.Scale</div>
+                            </div>
+                            <div class="e-rowcell" style="width: 69px;padding-left: 12px">
+                                <div class="text" style="padding-left: 0px; padding-top: 7px">@vItem.Min</div>
+                            </div>
+                            <div class="e-rowcell" style="width: auto;padding-left: 12px">
+                                <div class="text" style="padding-left: 0px; padding-top: 7px">@vItem.Max</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </Template>
+        </GridEditSettings>
+        <GridSortSettings>
+            <GridSortColumns>
+                <GridSortColumn Field=@nameof(SettingsModel.Group) Direction="SortDirection.Descending" />
+            </GridSortColumns>
+        </GridSortSettings>
+        <GridColumns>
+            <GridColumn Field=@nameof(SettingsModel.Group) HeaderText="Group" AutoFit="true" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="false" />
+            <GridColumn Field=@nameof(SettingsModel.Name) HeaderText="Name" Width="200" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="false" IsPrimaryKey="true" />
+            <GridColumn Field=@nameof(SettingsModel.Value) HeaderText="Value" Width="120" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="true" EditType="EditType.NumericEdit" />
+            <GridColumn Field=@nameof(SettingsModel.Unit) HeaderText="Unit" Width="71" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="false" />
+            <GridColumn Field=@nameof(SettingsModel.Default) HeaderText="Default" Width="93" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="false" />
+            <GridColumn Field=@nameof(SettingsModel.Step) HeaderText="Step" Width="75" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="false" />
+            <GridColumn Field=@nameof(SettingsModel.Scale) HeaderText="Scale" Width="81" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="false" />
+            <GridColumn Field=@nameof(SettingsModel.Min) HeaderText="Min" Width="69" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="false" />
+            <GridColumn Field=@nameof(SettingsModel.Max) HeaderText="Max" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" AllowEditing="false" />
+        </GridColumns>
+    </SfGrid>
+</div>
+
+<style>
+    .content {
+        height: calc(100% - 220px);
+    }
+
+
+    .e-grid .e-gridheader .e-sortfilter .e-fltr-icon .e-headercelldiv {
+        margin: -5px 0px -5px 0px;
+        padding-right: 5px;
+    }
+
+    .e-grid .e-icons {
+        color: #495057;
+        /*display: none;*/
+    }
+
+    .e-grid .e-groupcaption, .e-grid .e-indentcell, .e-grid .e-recordplusexpand, .e-grid .e-recordpluscollapse {
+        background-color: #36428633 !important;
+        color: #495057;
+    }
+</style>
+
+@code {
+    //SfGrid<SettingsModel> GridInstance { get; set; }
+
+    public string[] GroupedColumns = new string[] { "Group" };
+
+    public Dictionary<string, object> ChangeList = new Dictionary<string, object>();
+
+    //public IEditorSettings StringEditParams = new StringEditCellParams { Params = new TextBoxModel() { Readonly = true } };
+    //public IEditorSettings NumberEditParams = new NumericEditCellParams { Params = new NumericTextBoxModel<object>() {  } };
+
+    protected override async Task OnInitializedAsync()
+    {
+        SettingsService.LoadSettings();
+    }
+
+    async Task CellSaved(CellSaveArgs<SettingsModel> CellArgs)
+    {
+        Console.WriteLine(CellArgs.RowData.Name + ": " + CellArgs.PreviousValue + " -> " + CellArgs.Value);
+        ChangeList.Add(CellArgs.RowData.Name, CellArgs.Value);
+        // Update SettingsCollection
+    }
+
+    public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Text == "Update")
+        {
+            foreach (var vItem in ChangeList)
+            {
+                Console.WriteLine("    "+vItem);
+            }
+            ChangeList.Clear();
+            // Write to File 
+        }
+        else if (args.Item.Text == "Cancel")
+        {
+            Console.WriteLine("ReadFromFile()");
+            ChangeList.Clear();
+            //SettingsService.LoadSettings();
+        }
+    }
+
+    private void ActionComplete(ActionEventArgs<SettingsModel> args)
+    {
+        //
+    }
+}

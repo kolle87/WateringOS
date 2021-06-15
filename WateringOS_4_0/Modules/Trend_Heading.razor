@@ -1,0 +1,15 @@
+﻿@namespace WateringOS_4_0.Pages
+
+
+
+<h2>Watering on @trendDate</h2>
+
+@code {
+    [Parameter]
+    public RenderFragment trendDate { get; set; }
+
+    public void Update()
+    {
+        StateHasChanged();
+    }
+}

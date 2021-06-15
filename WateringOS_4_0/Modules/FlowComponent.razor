@@ -1,0 +1,104 @@
+﻿@namespace WateringOS_4_0.Pages
+
+<div class="control-section" style="padding-left:20px; padding-right:20px">
+
+    <h4 style="padding-left: 5px">Outputs / Flow</h4>
+
+    <!-- Pump -->
+    <div class="row">
+        <div class="col-sm-4 flow">
+            <div class="container" id="stat_pump" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Pump</span></div>
+        </div>
+        <!--
+            <div class="col-sm-8" style="text-align:center">
+                <p></p>
+            </div>
+        -->
+    </div>
+    <!-- Valve 1 -->
+    <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
+        <div class="col-sm-4 flow">
+            <div class="container" id="stat_vv1" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #1</span></div>
+        </div>
+        <div class="col-2 flow" style="text-align: right; padding-top:7px">
+            <span class="text" id="txt_Flow1">---ml</span>
+        </div>
+        <div class="col flow" style="padding-top: 7px;">
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow1" style="width:70%"></div></div>
+        </div>
+    </div>
+    <!-- Valve 2 -->
+    <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
+        <div class="col-sm-4 flow">
+            <div class="container" id="stat_vv2" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #2</span></div>
+        </div>
+        <div class="col-2 flow" style="text-align: right; padding-top:7px">
+            <span class="text" id="txt_Flow2">---ml</span>
+        </div>
+        <div class="col flow" style="padding-top: 7px;">
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow1" style="width:70%"></div></div>
+        </div>
+    </div>
+    <!-- Valve 3 -->
+    <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
+        <div class="col-sm-4 flow">
+            <div class="container" id="stat_vv3" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #3</span></div>
+        </div>
+        <div class="col-2 flow" style="text-align: right; padding-top:7px">
+            <span class="text" id="txt_Flow3">---ml</span>
+        </div>
+        <div class="col flow" style="padding-top: 7px;">
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow3" style="width:70%"></div></div>
+        </div>
+    </div>
+    <!-- Valve 4 -->
+    <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
+        <div class="col-sm-4 flow">
+            <div class="container" id="stat_vv4" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #4</span></div>
+        </div>
+        <div class="col-2 flow" style="text-align: right; padding-top:7px">
+            <span class="text" id="txt_Flow4">---ml</span>
+        </div>
+        <div class="col flow" style="padding-top: 7px;">
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow4" style="width:70%"></div></div>
+        </div>
+    </div>
+    <!-- Valve 5 -->
+    <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
+        <div class="col-sm-4 flow">
+            <div class="container" id="stat_vv5" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #5</span></div>
+        </div>
+        <div class="col-2 flow" style="text-align: right; padding-top:7px">
+            <span class="text" id="txt_Flow5">---ml</span>
+        </div>
+        <div class="col flow" style="padding-top: 7px;">
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow5" style="width:70%"></div></div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .col-sm-4.flow {
+        max-width: 200px;
+        min-width: 130px;
+    }
+
+    .col-2.flow {
+        max-width: 80px;
+    }
+
+    .col.flow {
+        min-width: 200px;
+        max-width: 600px;
+        padding-bottom: 5px;
+    }
+
+    .progress {
+        background-color: #CCCCCC !important;
+    }
+</style>
+
+@code {
+
+}

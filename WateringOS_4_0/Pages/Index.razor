@@ -1,0 +1,57 @@
+﻿@page "/"
+@using Syncfusion.Blazor.Layouts
+@namespace WateringOS_4_0.Pages
+
+
+<div style="margin-bottom:50px; height:100%">
+
+    <h2 style="margin-bottom:0px">Overview</h2>
+
+    <!-- Row 1 -->
+    <div class="row" style="padding-bottom: 2rem;">
+        <div class="col-sm-12">
+            <p>Last updated: <span class="text" id="txt_TimeStamp">--/--/---- --:--:--.---</span></p>
+        </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row">
+        <!-- Tank & Pressure-->
+        <div class="col-sm-4" style="padding-bottom: 30px;">
+            <div class="row" style="height: 100%;">
+                <!-- Tank -->
+                <div class="col-6" style="min-width: 200px">
+                    <TankLevel />
+                </div>
+                <!-- Pressure -->
+                <div class="col-6" style="min-width: 200px">
+                    <PressureGauge />
+                </div>
+            </div>
+        </div>
+        <!-- Valves & Flow -->
+        <div class="col-sm-8" style="padding-bottom: 30px;">
+            <FlowComponent />
+        </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row">
+        <!-- Temperatures -->
+        <div class="col-sm-4" style="min-width: 300px; padding-bottom: 30px;">
+            <Temperatures />
+        </div>
+        <!-- Power Supply -->
+        <div class="col-sm-4" style="min-width: 300px; padding-bottom: 30px;">
+            <PowerSupply />
+        </div>
+        <!-- Environment -->
+        <div class="col-sm-4" style="min-width: 300px; margin-bottom: 50px;">
+            <Environment />
+        </div>
+    </div>
+</div>
+
+
+@{
+}
