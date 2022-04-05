@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using WateringOS_4_0.Loggers;
 
 namespace WateringOS_4_0.Models
 {
@@ -33,7 +34,7 @@ namespace WateringOS_4_0.Models
         [OnError]
         internal void OnError(StreamingContext context, ErrorContext errorContext)
         {
-            Console.WriteLine(errorContext.Error.ToString());
+            Logger.Post(Logger.SYS, LogType.Error, "JSON Serialization Error in WateringModel.cs[public class WateringModel]", errorContext.Error.ToString());
             errorContext.Handled = true;
         }
     }

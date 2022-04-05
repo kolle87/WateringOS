@@ -1,5 +1,9 @@
 ﻿@namespace WateringOS_4_0.Pages
 
+@implements IDisposable
+
+@using WateringOS_4_0.Models
+
 <div class="control-section" style="padding-left:20px">
 
     <h5>Power Supply</h5>
@@ -7,12 +11,12 @@
     <div class="row">
         <div class="col-fixed pwr">5V:</div>
         <div class="col-auto pwr" >
-            <div class="container pwr" id="stat_PG5" style="background-color:crimson;">
+            <div class="container pwr" id="stat_PG5" style="background-color:@StateStyle(RecentValues.PowerGood_5V);">
                 <span class="text" style="color:whitesmoke">Low</span>
             </div>
         </div>
         <div class="col-auto pwr" style="margin-left:5px">
-            <div class="container pwr" id="stat_PF5" style="background-color:crimson;">
+            <div class="container pwr" id="stat_PF5" style="background-color:@StateStyle(!RecentValues.PowerFail_5V);">
                 <span class="text" style="color:whitesmoke">Fail</span>
             </div>
         </div>
@@ -20,12 +24,12 @@
     <div class="row">
         <div class="col-fixed pwr">12V:</div>
         <div class="col-auto pwr" >
-            <div class="container pwr" id="stat_PG12" style="background-color:crimson;">
+            <div class="container pwr" id="stat_PG12" style="background-color:@StateStyle(RecentValues.PowerGood_12V);">
                 <span class="text" style="color:whitesmoke">Low</span>
             </div>
         </div>
         <div class="col-auto pwr" style="margin-left:5px;">
-            <div class="container pwr" id="stat_PF12" style="background-color:crimson;">
+            <div class="container pwr" id="stat_PF12" style="background-color:@StateStyle(!RecentValues.PowerFail_12V);">
                 <span class="text" style="color:whitesmoke">Fail</span>
             </div>
         </div>
@@ -33,12 +37,12 @@
     <div class="row">
         <div class="col-fixed pwr">24V:</div>
         <div class="col-auto pwr" >
-            <div class="container pwr" id="stat_PG24" style="background-color:crimson;">
+            <div class="container pwr" id="stat_PG24" style="background-color:@StateStyle(RecentValues.PowerGood_24V);">
                 <span class="text" style="color:whitesmoke">Low</span>
             </div>
         </div>
         <div class="col-auto pwr" style="margin-left:5px;">
-            <div class="container pwr" id="stat_PG24" style="background-color:crimson;">
+            <div class="container pwr" id="stat_PG24" style="background-color:@StateStyle(!RecentValues.PowerFail_24V);">
                 <span class="text" style="color:whitesmoke">Fail</span>
             </div>
         </div>
@@ -69,13 +73,25 @@
 </style>
 
 @code {
-    private string TempAmbText = "23 °C";
-    private string TempExpText = "27 °C";
-    private string TempPcbText = "42 °C";
-    private string TempCpuText = "47 °C";
-
-    private void SetTemperature(double Temperature)
+    protected override async Task OnInitializedAsync()
     {
+        await Task.Run(delegate { Globals.GUI.HasChanged_slow += Update; });
+    }        
+    private void Update()
+    {
+        InvokeAsync(() => StateHasChanged());
+    }
 
+    private string StateStyle(bool status)
+    {
+        if (status)
+            return "forestgreen";
+        else
+            return "crimson";
+    }
+
+    public void Dispose()
+    {
+        Globals.GUI.HasChanged_slow -= Update;
     }
 }

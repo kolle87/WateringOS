@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using WateringOS_4_0.Loggers;
+using WateringOS_4_0.Services;
+using static WateringOS_4_0.Globals;
 
 namespace WateringOS_4_0
 {
@@ -13,7 +12,31 @@ namespace WateringOS_4_0
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Server.Host = CreateHostBuilder(args).Build();
+
+            Logger.SYS.Parent = Server.Host.Services.GetRequiredService<ILogger<Program>>();
+            Logger.USR.Parent = Server.Host.Services.GetRequiredService<ILogger<AccountService>>();
+            Logger.WEB.Parent = Server.Host.Services.GetRequiredService<ILogger<Pages.WebInterface>>();
+            Logger.DIO.Parent = Server.Host.Services.GetRequiredService<ILogger<Interfaces.DIOInterface>>();
+            Logger.TWI.Parent = Server.Host.Services.GetRequiredService<ILogger<Interfaces.TWIInterface>>();
+            Logger.SPI.Parent = Server.Host.Services.GetRequiredService<ILogger<Interfaces.SPIInterface>>();
+
+            Simulator.SetInitalValues();
+
+            JournalService.LoadJournal();
+            EnvironmentService.LoadEnvironmentLog();
+            LevelService.LoadLevelLog();
+            PowerService.LoadPowerLog();
+            WateringLogService.LoadWateringLogs();
+            LoadSettings();
+            LoadPreferences();
+
+            Version.Load();
+            Interface.Initialize();
+            Schedulers.Initialize();
+
+            Server.Host.Run();
+            
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

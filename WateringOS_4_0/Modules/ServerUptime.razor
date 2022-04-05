@@ -1,0 +1,23 @@
+﻿@namespace WateringOS_4_0.Pages
+
+@implements IDisposable
+
+<td style="text-align:right"><p style="font-size:0.8em; margin: 0px 0px 0px 0px">Uptime:</p></td>
+<td style="width:120px"><p style="font-size:0.8em; margin: 0px 1em 0px 0px">@Globals.Server.Uptime</p></td>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(delegate { Globals.GUI.HasChanged_slow += Update; });
+
+    }        
+    private void Update()
+    {
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    public void Dispose()
+    {
+        Globals.GUI.HasChanged_slow -= Update;
+    }
+}

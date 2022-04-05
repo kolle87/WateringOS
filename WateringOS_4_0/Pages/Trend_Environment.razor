@@ -3,10 +3,9 @@
 
 @using Syncfusion.Blazor.Charts
 @using Syncfusion.Blazor
+@using WateringOS_4_0.Services
 @using WateringOS_4_0.Models
 @using System.Collections.ObjectModel
-
-@inject Services.EnvironmentService EnvironmentService
 
 <div class="control-section" style="height:100%">
     <div class="row" style="margin-bottom:1.5em">
@@ -75,10 +74,7 @@
 </style>
 
 @code{
-
     private DateTime MinX = DateTime.Now.AddDays(-7);
-    private DateTime MaxX = DateTime.Now;
-
     private string AxisFormat = "dd/MMM";
     private int AxisInterval = 1;
     private IntervalType AxisIntType = IntervalType.Days;
@@ -88,9 +84,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        EnvironmentService.LoadEnvironmentLog();
-        MinX = GetDayRounded(EnvironmentService.EnvironmentLog.Last().TimeStamp.AddDays(-7));
-        MaxX = GetDayEndRounded(EnvironmentService.EnvironmentLog.Last().TimeStamp);
+        await Task.Run(delegate { MinX = GetDayRounded(EnvironmentService.EnvironmentLog.Last().TimeStamp.AddDays(-7)); });
     }
 
     private void ShowWeek()

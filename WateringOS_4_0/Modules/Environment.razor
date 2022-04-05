@@ -1,16 +1,20 @@
 ﻿@namespace WateringOS_4_0.Pages
 
+@implements IDisposable
+
+@using WateringOS_4_0.Models
+
 <div class="control-section" style="padding-left:20px">
 
     <h5>Enviromental</h5>
 
     <div class="row">
         <div class="col-fixed env">Rain:</div>
-        <div class="col-auto env" ><span class="text" id="stat_Rain">---</span></div>
+        <div class="col-auto env" ><span class="text" id="stat_Rain">@RecentValues.Rain</span></div>
     </div>
     <div class="row">
         <div class="col-fixed env">Ground:</div>
-        <div class="col-auto env" ><span class="text" id="stat_Ground">---</span></div>
+        <div class="col-auto env" ><span class="text" id="stat_Ground">@RecentValues.Ground</span></div>
     </div>
     <div class="row">
         <div class="col-12"><p></p></div>
@@ -35,13 +39,17 @@
 </style>
 
 @code {
-    private string TempAmbText = "23 °C";
-    private string TempExpText = "27 °C";
-    private string TempPcbText = "42 °C";
-    private string TempCpuText = "47 °C";
-
-    private void SetTemperature(double Temperature)
+    protected override async Task OnInitializedAsync()
     {
+        await Task.Run(delegate { Globals.GUI.HasChanged_slow += Update; });
+    }        
+    private void Update()
+    {
+        InvokeAsync(() => StateHasChanged());
+    }
 
+    public void Dispose()
+    {
+        Globals.GUI.HasChanged_slow -= Update;
     }
 }

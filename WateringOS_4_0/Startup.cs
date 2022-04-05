@@ -1,15 +1,11 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WateringOS_4_0.Services;
 using Syncfusion.Blazor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Prometheus;
 
 namespace WateringOS_4_0
 {
@@ -32,14 +28,9 @@ namespace WateringOS_4_0
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSyncfusionBlazor();
-            services.AddSingleton<CounterService>();
             services.AddSingleton<AccountService>();
-            services.AddSingleton<LogService>();
-            services.AddSingleton<LevelService>();
-            services.AddSingleton<WateringLogService>();
-            services.AddSingleton<EnvironmentService>();
-            services.AddSingleton<PowerService>();
-            services.AddSingleton<SettingsService>();
+            //services.AddSingleton<JournalService>();
+            services.AddSingleton<OperatorService>();
             services.AddScoped<IAlertService, AlertService>();
         }
 
@@ -61,8 +52,11 @@ namespace WateringOS_4_0
 
             app.UseRouting();
 
+            app.UseHttpMetrics();
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapMetrics();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

@@ -3,10 +3,9 @@
 
 @using Syncfusion.Blazor.Charts
 @using Syncfusion.Blazor
+@using WateringOS_4_0.Services
 @using WateringOS_4_0.Models
 @using System.Collections.ObjectModel
-
-@inject Services.PowerService PowerService
 
 <div class="control-section" style="height:100%">
     <div class="row" style="margin-bottom:1.5em">
@@ -48,14 +47,14 @@
         <ChartTooltipSettings Enable="true" Shared="true" Header="${point.x}" Format="${series.name} : ${point.y}" />
 
         <ChartSeriesCollection>
-            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="5V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_5V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#FFFF33"><ChartSeriesBorder Width="2" Color="#CC9900" /></ChartSeries>
-            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="12V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_12V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#FF6600"><ChartSeriesBorder Width="2" Color="#993300" /></ChartSeries>
-            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="24V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_24V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#CC3333"><ChartSeriesBorder Width="2" Color="#990000" /></ChartSeries>
-            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="5V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_5V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#00FF00"><ChartSeriesBorder Width="2" Color="#006600" /></ChartSeries>
-            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="12V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_12V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#00CCFF"><ChartSeriesBorder Width="2" Color="#0033FF" /></ChartSeries>
-            <ChartSeries DataSource="@PowerService.PowerLog" YAxisName="PowerAxis" Name="24V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_24V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#9933FF"><ChartSeriesBorder Width="2" Color="#660099" /></ChartSeries>
+            <ChartSeries DataSource="@_PowerLog" YAxisName="PowerAxis" Name="5V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_5V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#FFFF33"><ChartSeriesBorder Width="2" Color="#CC9900" /></ChartSeries>
+            <ChartSeries DataSource="@_PowerLog" YAxisName="PowerAxis" Name="12V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_12V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#FF6600"><ChartSeriesBorder Width="2" Color="#993300" /></ChartSeries>
+            <ChartSeries DataSource="@_PowerLog" YAxisName="PowerAxis" Name="24V Fail" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerFail_24V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#CC3333"><ChartSeriesBorder Width="2" Color="#990000" /></ChartSeries>
+            <ChartSeries DataSource="@_PowerLog" YAxisName="PowerAxis" Name="5V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_5V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#00FF00"><ChartSeriesBorder Width="2" Color="#006600" /></ChartSeries>
+            <ChartSeries DataSource="@_PowerLog" YAxisName="PowerAxis" Name="12V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_12V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#00CCFF"><ChartSeriesBorder Width="2" Color="#0033FF" /></ChartSeries>
+            <ChartSeries DataSource="@_PowerLog" YAxisName="PowerAxis" Name="24V Low" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.PowerGood_24V)" Opacity="1" Type="ChartSeriesType.Area" Fill="#9933FF"><ChartSeriesBorder Width="2" Color="#660099" /></ChartSeries>
 
-            <ChartSeries DataSource="@PowerService.PowerLog" Name="Watchdog Pre-Alarm" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.WatchdogPrealarm)" Opacity="0.7" Type="ChartSeriesType.Area" Fill="#CC3333"><ChartSeriesBorder Width="2" Color="#990000" /></ChartSeries>
+            <ChartSeries DataSource="@_PowerLog" Name="Watchdog Pre-Alarm" XName="@nameof(PowerModel.TimeStamp)" YName="@nameof(PowerModel.WatchdogPrealarm)" Opacity="0.7" Type="ChartSeriesType.Area" Fill="#CC3333"><ChartSeriesBorder Width="2" Color="#990000" /></ChartSeries>
 
         </ChartSeriesCollection>
 
@@ -76,6 +75,7 @@
 </style>
 
 @code{
+    private ObservableCollection<PowerModel> _PowerLog = new();
 
     private DateTime MinX = DateTime.Now.AddDays(-7);
     private DateTime MaxX = DateTime.Now;
@@ -89,14 +89,27 @@
 
     protected override async Task OnInitializedAsync()
     {
-        PowerService.LoadPowerLog();
-        MinX = GetDayRounded(PowerService.PowerLog.Last().TimeStamp.AddDays(-7));
-        MaxX = GetDayEndRounded(PowerService.PowerLog.Last().TimeStamp);
+        await Task.Run(delegate { PowerService.PushLog += LoadLog; PowerService.AddToLog += AddToLog; });
+        PowerService.RequestLog(); // -> PushLog -> LoadLog       
+    }
+
+    private void LoadLog(ObservableCollection<PowerModel> _received)
+    {
+        _PowerLog = _received;
+        MinX = GetDayRounded(_PowerLog.Last().TimeStamp.AddDays(-7));
+        MaxX = GetDayEndRounded(_PowerLog.Last().TimeStamp);
+    }
+
+    private void AddToLog(PowerModel _received)
+    {
+        _PowerLog.Add(_received);
+        MinX = GetDayRounded(_PowerLog.Last().TimeStamp.AddDays(-7));
+        MaxX = GetDayEndRounded(_PowerLog.Last().TimeStamp);
     }
 
     private void ShowWeek()
     {
-        MinX = GetDayRounded(PowerService.PowerLog.Last().TimeStamp.AddDays(-7));
+        MinX = GetDayRounded(_PowerLog.Last().TimeStamp.AddDays(-7));
         AxisFormat = "dd/MMM";
         AxisInterval = 1;
         AxisIntType = IntervalType.Days;
@@ -106,7 +119,7 @@
 
     private void ShowDay()
     {
-        MinX = GetHourRounded(PowerService.PowerLog.Last().TimeStamp.AddHours(-24));
+        MinX = GetHourRounded(_PowerLog.Last().TimeStamp.AddHours(-24));
         AxisFormat = "HH:mm";
         AxisInterval = 1;
         AxisIntType = IntervalType.Hours;

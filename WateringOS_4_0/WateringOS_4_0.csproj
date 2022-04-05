@@ -1,13 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>6084a227-1a59-46a3-8a75-f79209fd73b6</UserSecretsId>
+    <Copyright></Copyright>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+	  <VersionPrefix>4.0.1</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Syncfusion.Blazor" Version="19.1.0.56" />
+    <None Remove="version.dat" />
+    <None Remove="version.py" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Iot.Device.Bindings" Version="2.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />
+    <PackageReference Include="Syncfusion.Blazor" Version="19.4.0.56" />
+    <PackageReference Include="System.Device.Gpio" Version="2.1.0" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="call python &quot;$(ProjectDir)version.py&quot; &quot;$(VersionPrefix)&quot; &quot;$(Configuration)&quot; &quot;$(ProjectDir)$(OutDir)&quot;" />
+  </Target>
 
 </Project>

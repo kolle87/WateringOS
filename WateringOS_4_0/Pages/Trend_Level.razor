@@ -1,9 +1,11 @@
 ﻿@page "/trend_level"
+
 @using Syncfusion.Blazor.Charts
 @using Syncfusion.Blazor
+@using WateringOS_4_0.Services
 @using WateringOS_4_0.Models
 @using System.Collections.ObjectModel
-@inject Services.LevelService LevelService
+
 @namespace WateringOS_4_0.Pages
 
 <div class="control-section" style="margin-bottom:50px; height:100%">
@@ -23,7 +25,7 @@
             <ChartAreaBorder Width="0" />
         </ChartArea>
 
-        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime" IntervalType=@AxisIntType LabelFormat=@AxisFormat Interval=@AxisInterval Minimum=@MinX MinorTicksPerInterval="3" EdgeLabelPlacement="EdgeLabelPlacement.Shift">
+        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime" Minimum=@MinX IntervalType=@AxisIntType LabelFormat=@AxisFormat Interval=@AxisInterval MinorTicksPerInterval="3" EdgeLabelPlacement="EdgeLabelPlacement.Shift">
             <ChartAxisMajorGridLines Width="1" Color="darkgrey" />
             <ChartAxisMinorGridLines Width="1" Color="lightgrey" />
         </ChartPrimaryXAxis>
@@ -44,6 +46,7 @@
         <ChartSeriesCollection>
             <ChartSeries DataSource="@LevelService.LevelLog" Name="Level" XName="@nameof(LevelModel.TimeStamp)" YName="@nameof(LevelModel.Tank)" Opacity="0.3" Type="ChartSeriesType.Area" Fill="#007bff">
                 <ChartSeriesBorder Width="2" Color="darkblue" />
+                <ChartSeriesAnimation Enable=true />
                 <ChartMarker Visible="false">
                     <ChartDataLabel Name="@nameof(LevelModel.TimeStamp)" />
                 </ChartMarker>
@@ -67,10 +70,7 @@
 </style>
 
 @code{
-
     private DateTime MinX = DateTime.Now.AddDays(-7);
-    private DateTime MaxX = DateTime.Now;
-
     private string AxisFormat = "dd/MMM";
     private int AxisInterval = 1;
     private IntervalType AxisIntType = IntervalType.Days;
@@ -80,9 +80,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LevelService.LoadLevelLog();
-        MinX = GetDayRounded(LevelService.LevelLog.Last().TimeStamp.AddDays(-7));
-        MaxX = GetDayEndRounded(LevelService.LevelLog.Last().TimeStamp);
+        await Task.Run(delegate { MinX = GetDayRounded(LevelService.LevelLog.Last().TimeStamp.AddDays(-7)); });
     }
 
     private void ShowWeek()

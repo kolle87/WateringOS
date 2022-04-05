@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Web;
 using WateringOS_4_0.Models;
+using WateringOS_4_0.Loggers;
 
 namespace WateringOS_4_0.Services
 {
@@ -18,9 +19,9 @@ namespace WateringOS_4_0.Services
 
         public event Action AccountLogin;
         public event Action AccountLogout;
-        public event Action AccountDelete;
+        //public event Action AccountDelete;
 
-        public List<ApprovedUser> ApprovedUsers = new List<ApprovedUser>(); 
+        public List<ApprovedUser> ApprovedUsers = new(); 
 
 
         public bool LogIn(string fingerprint, string _instance, string phrase)
@@ -28,13 +29,13 @@ namespace WateringOS_4_0.Services
             if (phrase=="3507866") 
             {
                 ApprovedUsers.Add(new ApprovedUser{ Fingerprint=fingerprint, HashCode=_instance });
-                Console.WriteLine("{0} logged in", fingerprint);
+                Logger.Post(Logger.USR, LogType.Information, "User " + fingerprint + " logged in", "New user logged in with administrator level");
                 if (AccountLogin != null) { AccountLogin?.Invoke(); }
                 return true;
             }
             else
             {
-                Console.WriteLine("{0} wrong password", fingerprint);
+                Logger.Post(Logger.USR, LogType.Warning, "User " + fingerprint + " entered a wrong password", "A user entered a wrong password.");
                 return false;
             }            
         }
@@ -45,7 +46,7 @@ namespace WateringOS_4_0.Services
             if (user != null)
             {               
                 ApprovedUsers.Remove(user);
-                Console.WriteLine("{0} logged out", fingerprint);
+                Logger.Post(Logger.USR, LogType.Information, "User " + fingerprint + " logged out", "User logged out from administrator level");
                 if (AccountLogout != null) { AccountLogout?.Invoke(); }
             }
         }
@@ -57,7 +58,7 @@ namespace WateringOS_4_0.Services
             {
                 ApprovedUsers.Remove(user);                
             }
-            Console.WriteLine("{0} closed the session", fingerprint);
+            Logger.Post(Logger.USR, LogType.Information, "User " + fingerprint + " closed the session", "The user closed the session and was removed from user list");
         }
 
         public bool IsAuthorized(string fingerprint)
@@ -75,12 +76,10 @@ namespace WateringOS_4_0.Services
 
         public string GetFingerprint()
         {
-            using (RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider())
-            {
+            using RNGCryptoServiceProvider rngCsp = new();
                 byte[] data = new byte[12];
                 rngCsp.GetBytes(data);
                 return BitConverter.ToString(data, 0);
-            }
         }
     }
 }

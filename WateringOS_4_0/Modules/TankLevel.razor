@@ -1,6 +1,9 @@
 ﻿@namespace WateringOS_4_0.Pages
 
+@implements IDisposable
+
 @using Syncfusion.Blazor.CircularGauge
+@using WateringOS_4_0.Models
 
 <div class="control-section" id="target" style="padding-top:2em;width:100%;height:100%">
     <SfCircularGauge Height="95%">
@@ -16,7 +19,7 @@
                     <CircularGaugeRange Start="0" End="100" Radius="100%" StartWidth="30" EndWidth="30" Color="#E0E0E0" RoundedCornerRadius="20" />
                 </CircularGaugeRanges>
                 <CircularGaugePointers>
-                    <CircularGaugePointer Value="@ValuePercent" RoundedCornerRadius="20" Type="PointerType.RangeBar" Radius="100%" Color="@PointerColor" PointerWidth="30">
+                    <CircularGaugePointer Value="@RecentValues.LevelInPercent" RoundedCornerRadius="20" Type="PointerType.RangeBar" Radius="100%" Color="@PointerColor" PointerWidth="30">
                         <CircularGaugePointerAnimation Enable="false" />
                         <CircularGaugePointerBorder Color="grey" Width="0.01" />
                     </CircularGaugePointer>
@@ -57,22 +60,29 @@
 
 @code {
     private string PointerColor = "#038c9a";
-    private double ValuePercent = 87;
-    private double ValueLiter = 48;
-    private string ValuePercentText = "87%";
-    private string ValueLiterText = "48 l";
+    private string ValuePercentText = RecentValues.LevelInPercent.ToString() + "%";
+    private string ValueLiterText = RecentValues.LevelInLiter.ToString() + " l";
 
-    private void SetTankLevel(int Percent, int Liter)
+    protected override async Task OnInitializedAsync()
     {
-        ValuePercent = Percent;
-        ValueLiter = Liter;
+        await Task.Run(delegate { Globals.GUI.HasChanged_slow += Update; });
+    }  
 
-        // use MinTankLevel
-        if (ValuePercent <= 5) { PointerColor = "#ea501a"; }
+    private void Update()
+    {
+        int MinTankLevel = Globals.SystemSettings.FirstOrDefault(x => x.Name == "ALM_TankLevel").Value;
+
+        if (RecentValues.LevelInPercent <= MinTankLevel) { PointerColor = "#ea501a"; }
         else { PointerColor = "#038c9a"; }
 
-        ValuePercentText = ValuePercent.ToString() + "%";
-        ValueLiterText = ValueLiter.ToString() + " l";
+        ValuePercentText = RecentValues.LevelInPercent.ToString() + "%";
+        ValueLiterText = RecentValues.LevelInLiter.ToString() + " l";
 
+        InvokeAsync(() => { StateHasChanged(); });
+    }
+
+    public void Dispose()
+    {
+        Globals.GUI.HasChanged_slow -= Update;
     }
 }

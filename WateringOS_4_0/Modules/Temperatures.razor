@@ -1,23 +1,27 @@
 ﻿@namespace WateringOS_4_0.Pages
 
+@implements IDisposable
+
+@using WateringOS_4_0.Models 
+
 <div class="control-section" style="padding-left:20px">
 
     <h5>Temperatures</h5>
     <div class="row">
         <div class="col-fixed temp">Ambient:</div>
-        <div class="col-auto temp" ><span class="text" id="stat_Amb">--°C</span></div>
+        <div class="col-auto temp" ><span class="text" id="stat_Amb">@RecentValues.TempAmb °C</span></div>
     </div>
     <div class="row">
         <div class="col-fixed temp">Exposed:</div>
-        <div class="col-auto temp" ><span class="text" id="stat_Exp">--°C</span></div>
+        <div class="col-auto temp" ><span class="text" id="stat_Exp">@RecentValues.TempExp °C</span></div>
     </div>
     <div class="row">
         <div class="col-fixed temp">Board:</div>
-        <div class="col-auto temp" ><span class="text" id="stat_Board">--°C</span></div>
+        <div class="col-auto temp" ><span class="text" id="stat_Board">@RecentValues.TempPCB °C</span></div>
     </div>
     <div class="row">
         <div class="col-fixed temp">CPU:</div>
-        <div class="col-auto temp" ><span class="text" id="stat_CPU">--°C</span></div>
+        <div class="col-auto temp" ><span class="text" id="stat_CPU">@RecentValues.TempCPU °C</span></div>
     </div>
     <div class="row">
         <div class="col-12"><p></p></div>
@@ -41,13 +45,17 @@
 </style>
 
 @code {
-    private string TempAmbText = "23 °C";
-    private string TempExpText = "27 °C";
-    private string TempPcbText = "42 °C";
-    private string TempCpuText = "47 °C";
-
-    private void SetTemperature(double Temperature)
+    protected override async Task OnInitializedAsync()
     {
+        await Task.Run(delegate { Globals.GUI.HasChanged_slow += Update; });
+    }        
+    private void Update()
+    {
+        InvokeAsync(() => StateHasChanged());
+    }
 
+    public void Dispose()
+    {
+        Globals.GUI.HasChanged_slow -= Update;
     }
 }

@@ -1,0 +1,302 @@
+﻿@page "/preferences"
+
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using WateringOS_4_0.Models
+@using System.Collections.ObjectModel
+
+@namespace WateringOS_4_0.Pages
+
+<div id="target" class="control-section" style="margin-bottom:50px; height:100%">
+
+	 <SfDialog Width="350px" Height="200px" Target="#target" IsModal="true" @bind-Visible="Visibility">
+        <DialogTemplates>
+            <Header> @DlgHeader </Header>
+            <Content>
+				<SfTextBox @bind-Value="@NewName"></SfTextBox>
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton Content="Ok" IsPrimary="true" OnClick="@DlgOkClick" />
+            <DialogButton Content="Cancel" OnClick="@DlgCancelClick" />
+        </DialogButtons>
+        <DialogAnimationSettings Effect="@DialogEffect.None"></DialogAnimationSettings>
+    </SfDialog>
+
+    <div class="row" style="margin-bottom:1.5em">
+        <div class="col">
+            <h2 >Preferences</h2>			
+        </div>
+		<SfButton @onclick="Apply" CssClass="e-success">Apply</SfButton>
+		<SfButton @onclick="Discard" CssClass="e-danger">Discard</SfButton>
+    </div>    
+    
+    <SfDashboardLayout CellSpacing="@(new double[]{10 ,10 })" Columns="5" MediaQuery="max-width:1400px" DraggableHandle=".e-panel-header">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel Column=0>
+                <HeaderTemplate>
+					<div style="display: flex">
+						<div class="col" style="padding-left: 0px">
+							<div class="e-header-text">@Globals.Preferences.Plants[0].Name</div>
+						</div>
+						<div class="col" style="width: 40px; display:contents">
+							<SfChip style="padding: 0px; margin: 0px">
+								<ChipItems>
+									<ChipItem @onclick="Edit1Click" Text="edit" cssClass="e-outline"></ChipItem>
+								</ChipItems>
+							</SfChip>
+						</div>						
+					</div>					
+					<div class="header-border"></div>
+				</HeaderTemplate>
+                <ContentTemplate>
+                    <PlantPreference PlantID=0 />
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Column=1>
+                <HeaderTemplate>
+					<div style="display: flex">
+						<div class="col" style="padding-left: 0px">
+							<div class="e-header-text">@Globals.Preferences.Plants[1].Name</div>
+						</div>
+						<div class="col" style="width: 40px; display:contents">
+							<SfChip style="padding: 0px; margin: 0px">
+								<ChipItems>
+									<ChipItem @onclick="Edit2Click" Text="edit" cssClass="e-outline"></ChipItem>
+								</ChipItems>
+							</SfChip>
+						</div>						
+					</div>	
+					<div class="header-border"></div>
+				</HeaderTemplate>
+                <ContentTemplate>
+                    <PlantPreference PlantID=1 />
+				</ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Column=2>
+                <HeaderTemplate>
+					<div style="display: flex">
+						<div class="col" style="padding-left: 0px">
+							<div class="e-header-text">@Globals.Preferences.Plants[2].Name</div>
+						</div>
+						<div class="col" style="width: 40px; display:contents">
+							<SfChip style="padding: 0px; margin: 0px">
+								<ChipItems>
+									<ChipItem @onclick="Edit3Click" Text="edit" cssClass="e-outline"></ChipItem>
+								</ChipItems>
+							</SfChip>
+						</div>						
+					</div>	
+					<div class="header-border"></div>
+				</HeaderTemplate>
+                <ContentTemplate>
+                    <PlantPreference PlantID=2 />
+				</ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Column=3>
+                <HeaderTemplate>
+					<div style="display: flex">
+						<div class="col" style="padding-left: 0px">
+							<div class="e-header-text">@Globals.Preferences.Plants[3].Name</div>
+						</div>
+						<div class="col" style="width: 40px; display:contents">
+							<SfChip style="padding: 0px; margin: 0px">
+								<ChipItems>
+									<ChipItem @onclick="Edit4Click" Text="edit" cssClass="e-outline"></ChipItem>
+								</ChipItems>
+							</SfChip>
+						</div>						
+					</div>	
+					<div class="header-border"></div>
+				</HeaderTemplate>
+                <ContentTemplate>
+                    <PlantPreference PlantID=3/>
+				</ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Column=4>
+                <HeaderTemplate>
+					<div style="display: flex">
+						<div class="col" style="padding-left: 0px">
+							<div class="e-header-text">@Globals.Preferences.Plants[4].Name</div>
+						</div>
+						<div class="col" style="width: 40px; display:contents">
+							<SfChip style="padding: 0px; margin: 0px">
+								<ChipItems>
+									<ChipItem @onclick="Edit5Click" Text="edit" cssClass="e-outline"></ChipItem>
+								</ChipItems>
+							</SfChip>
+						</div>						
+					</div>	
+					<div class="header-border"></div>
+				</HeaderTemplate>
+                <ContentTemplate>
+                    <PlantPreference PlantID=4/>
+				</ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</div>
+
+<style>
+    .content {
+        height: calc(100% - 220px);
+    }
+
+    .e-control {
+        height: 100%;
+    }
+    
+	.e-panel {
+		height: 680px !important;
+	}
+
+	.e-panel-header {
+		font-size: 1.25rem !important;
+		height: auto !important;
+	}
+
+	.panel-content {
+		vertical-align: middle;
+		font-size: 14px;
+		font-weight: 500;
+		text-align: center;
+	}
+	body.material .panel-content,
+	body.fabric .panel-content,
+	body.bootstrap .panel-content
+	{
+		color: rgba(0, 0, 0, 0.61);
+	}
+	.row .row-header {
+		padding: 5px;
+	}
+	.e-panel-content {
+		height: calc(100% - 28px);
+		width: 100%;
+		display: block;
+	}
+	.row {
+		margin-left: 0px;
+		margin-right: 0px;
+	}
+	.e-selected-style {
+		border-color: #006CE6;
+		border-width: 2px;
+	}
+	.e-panel-content {
+		padding: 10px;
+	}
+	.header-border {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		border-top: 3px solid #2684ff
+	}
+	.e-template-icon {
+		display: block;
+		padding: 12px 0 12px 0;
+	}
+	.sb-property-border {
+		border: 1px solid lightgray;
+	}
+	body.highcontrast #dynamicLayout .panel-content {
+		color: rgba(255, 255, 255, 0.54);
+	}
+    .mobile .e-control.e-lib.e-dashboardlayout.e-responsive {
+        z-index: 0;
+        overflow: scroll;
+    }
+
+	.e-dialog .e-btn.e-flat, .e-css.e-btn.e-flat {
+		color: whitesmoke !important;
+	}
+
+	.e-btn.e-danger, .e-css.e-btn.e-danger {
+		background-color: #fff !important;
+		border-color: #dc3545;
+		color: #dc3545 !important;
+	}
+
+	.e-btn.e-success, .e-css.e-btn.e-success {
+		background-color: #28a745;
+		border-color: #28a745;
+		color: #fff !important;
+	}
+
+</style>
+
+@code{
+
+	private bool Visibility = false;
+	private byte EditCallerID = 0;
+	private string DlgHeader = "";
+	private string NewName = "";
+
+	private void DlgOkClick()
+	{
+		Globals.Preferences.Plants[EditCallerID].Name = this.NewName;
+		this.Visibility = false;
+	}
+
+	private void DlgCancelClick()
+	{	
+		this.Visibility = false;
+	}
+
+	private void Edit1Click()
+	{
+		this.EditCallerID = 0;
+		this.DlgHeader = "Enter a new name for Plant #1";
+		this.NewName = Globals.Preferences.Plants[0].Name;
+		this.Visibility = true;
+	}
+
+	private void Edit2Click()
+	{
+		this.EditCallerID = 1;
+		this.DlgHeader = "Enter a new name for Plant #2";
+		this.NewName = Globals.Preferences.Plants[1].Name;
+		this.Visibility = true;
+	}
+
+	private void Edit3Click()
+	{
+		this.EditCallerID = 2;
+		this.DlgHeader = "Enter a new name for Plant #3";
+		this.NewName = Globals.Preferences.Plants[2].Name;
+		this.Visibility = true;
+	}
+
+	private void Edit4Click()
+	{
+		this.EditCallerID = 3;
+		this.DlgHeader = "Enter a new name for Plant #4";
+		this.NewName = Globals.Preferences.Plants[3].Name;
+		this.Visibility = true;
+	}
+
+	private void Edit5Click()
+	{
+		this.EditCallerID = 4;
+		this.DlgHeader = "Enter a new name for Plant #5";
+		this.NewName = Globals.Preferences.Plants[4].Name;
+		this.Visibility = true;
+	}
+
+	private void Apply()
+	{
+		Globals.SavePreferences();
+		StateHasChanged();
+	}
+
+	private void Discard()
+	{
+		Globals.LoadPreferences();
+		StateHasChanged();
+	}
+
+}

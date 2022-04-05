@@ -1,0 +1,109 @@
+﻿@namespace WateringOS_4_0.Pages
+
+@using Syncfusion.Blazor.SplitButtons
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Buttons
+
+<h6>Watering Days</h6>
+<SfButtonGroup Mode="SelectionMode.Multiple" CssClass="e-outline e-vertical">
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Monday">Monday</ButtonGroupButton>
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Tuesday">Tuesday</ButtonGroupButton>
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Wednesday">Wednesday</ButtonGroupButton>
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Thursday">Thursday</ButtonGroupButton>
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Friday">Friday</ButtonGroupButton>
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Saturday">Saturday</ButtonGroupButton>
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Sunday">Sunday</ButtonGroupButton>
+</SfButtonGroup>
+
+<div style="border-bottom-width: thin;border-bottom-color: lightgrey;border-bottom-style: solid;margin-top: 1rem;"></div>
+<h6 style="margin-top: 0.25rem">Watering Times</h6>
+
+<SfButtonGroup Mode="SelectionMode.Multiple" CssClass="e-outline e-vertical">
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Morning">Morning</ButtonGroupButton>
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Noon">Noon</ButtonGroupButton>
+    <ButtonGroupButton @bind-Selected="@Globals.Preferences.Plants[PlantID].Evening">Evening</ButtonGroupButton>
+</SfButtonGroup>
+
+<div style="border-bottom-width: thin;border-bottom-color: lightgrey;border-bottom-style: solid;margin-top: 1rem;"></div>
+<h6 style="margin-top: 0.25rem">Volume</h6>
+<p style="margin: 0px 0px 0px 20%; font-size: small;">@Globals.Preferences.Plants[PlantID].Volume ml</p>
+<SfSlider Min="200" Max="2500" Step="100" @bind-Value="@Globals.Preferences.Plants[PlantID].Volume" Type="SliderType.MinRange">
+</SfSlider>
+
+<div style="border-bottom-width: thin;border-bottom-color: lightgrey;border-bottom-style: solid;margin-top: 1rem;"></div>
+<h6 style="margin-top: 0.25rem">Adaptive</h6>
+<div style="margin-left: 20%">
+    <SfSwitch @bind-Checked="@Globals.Preferences.Plants[PlantID].RainReduction"></SfSwitch>
+    <label style="padding: 0px 0px 0px 1rem">Rain Reduction</label>
+</div>
+<div style="margin-left: 20%">
+    <SfSwitch @bind-Checked="@Globals.Preferences.Plants[PlantID].ConsiderSoil"></SfSwitch>
+    <label style="padding: 0px 0px 0px 1rem">Consider Soil</label>
+</div>
+<div style="margin-left: 20%">
+    <SfSwitch @bind-Checked="@Globals.Preferences.Plants[PlantID].Cooling"></SfSwitch>
+    <label style="padding: 0px 0px 0px 1rem">Cooldown</label>
+</div>
+
+<!--
+<div style="border-bottom-width: thin;border-bottom-color: lightgrey;border-bottom-style: solid;margin-top: 1rem;"></div>
+-->
+
+<style>
+
+.e-btn-group {
+    margin-left: 20%;
+    width: 80%;
+}
+
+.e-btn:hover {
+    background-color: lightgray !important;
+}
+
+.e-btn-group .e-btn:focus, .e-btn-group input:focus+label.e-btn, .e-css.e-btn-group .e-btn:focus, .e-css.e-btn-group input:focus+label.e-btn {
+    background-color: white;
+    border-color: #6c757d;
+    color: #fff;
+    outline: #6c757d 0 solid;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.25em rgba(108,117,125,0.5);
+    box-shadow: none;
+    outline-color: inherit;
+}
+
+.e-btn-group .e-btn:focus input:checked, .e-btn-group input:checked+label.e-btn, .e-css.e-btn-group .e-btn:focus, .e-css.e-btn-group input:checked+label.e-btn {
+    background-color: lightgreen;
+    border-color: #6c757d;
+    color: #fff;
+    outline: #6c757d 0 solid;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.25em rgba(108,117,125,0.5);
+    box-shadow: none;
+    outline-color: inherit;
+}
+
+.e-btn {
+    background-color: white;
+    color: black !important;
+    box-shadow: 0 !important;
+}
+
+.e-control-wrapper.e-slider-container.e-horizontal {
+    height: 14px;
+    width: 100%;
+}
+
+.e-switch-wrapper .e-switch-handle, .e-css.e-switch-wrapper .e-switch-handle {
+    top: 5px;
+}
+
+.e-switch-wrapper .e-switch-inner, .e-css.e-switch-wrapper .e-switch-inner {
+    top: 3px;
+}
+
+</style>
+
+@code {
+    [Parameter]
+    public byte PlantID { get; set; } = 0;
+ }

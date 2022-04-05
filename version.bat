@@ -1,0 +1,1 @@
+python version.py %1 %2 %3 %4

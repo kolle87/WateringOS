@@ -110,6 +110,17 @@
     "Step": 1
   },
   {
+    "Name": "Tank_Volume",
+    "Group": "Calibration",
+    "Value": 80,
+    "Default": 80,
+    "Unit": "int",
+    "Scale": 1,
+    "Min": 1,
+    "Max": 255,
+    "Step": 1
+  },
+  {
     "Name": "Wat_min_tank",
     "Group": "Watering",
     "Value": 3,
@@ -176,7 +187,7 @@
     "Step": 1
   },
   {
-    "Name": "ALM_min_press",
+    "Name": "ALM_min_pressure",
     "Group": "Monitoring",
     "Value": 1200,
     "Default": 1200,

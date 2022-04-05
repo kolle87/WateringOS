@@ -24,7 +24,7 @@
                     <TabHeader Text="<<"></TabHeader>
                 </ChildContent>
                 <ContentTemplate>
-                    <Trend_Watering3 UpdateTrendDate=@UpdateFromChild />
+                    <Trend_Watering3 UpdateTrendDate=@UpdateTrendDate />
                 </ContentTemplate>
             </TabItem>
             <TabItem>
@@ -32,7 +32,7 @@
                     <TabHeader Text="<"></TabHeader>
                 </ChildContent>
                 <ContentTemplate>
-                    <Trend_Watering2 UpdateTrendDate=@UpdateFromChild />
+                    <Trend_Watering2 UpdateTrendDate=@UpdateTrendDate />
                 </ContentTemplate>
             </TabItem>
             <TabItem>
@@ -40,7 +40,7 @@
                     <TabHeader Text="Latest"></TabHeader>
                 </ChildContent>
                 <ContentTemplate>
-                    <Trend_Watering1 UpdateTrendDate=@UpdateFromChild />
+                    <Trend_Watering1 UpdateTrendDate=@UpdateTrendDate />
                 </ContentTemplate>
             </TabItem>
         </TabItems>
@@ -126,7 +126,7 @@
     private string TrendDate = "-. ---";
     protected Trend_Heading ChildComponent;
 
-    private void UpdateFromChild(string str)
+    private void UpdateTrendDate(string str)
     {
         TrendDate = str;
         ChildComponent.Update();
@@ -134,10 +134,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            WateringLogService.LoadWateringLog();
-        }
+        //
     }
 
 }

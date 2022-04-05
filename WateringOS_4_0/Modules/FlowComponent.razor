@@ -1,5 +1,11 @@
 ﻿@namespace WateringOS_4_0.Pages
 
+@implements IDisposable
+
+@using WateringOS_4_0.Models
+
+@inject Services.OperatorService OperatorService
+
 <div class="control-section" style="padding-left:20px; padding-right:20px">
 
     <h4 style="padding-left: 5px">Outputs / Flow</h4>
@@ -7,72 +13,69 @@
     <!-- Pump -->
     <div class="row">
         <div class="col-sm-4 flow">
-            <div class="container" id="stat_pump" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Pump</span></div>
-        </div>
-        <!--
-            <div class="col-sm-8" style="text-align:center">
-                <p></p>
+            <div class="container" id="stat_pump" style="border-radius:10px;background-color:@StateStyle(RecentValues.Pump) ;margin:7px 0px 7px 0px;text-align:center">
+                 <span class="text" style="color:whitesmoke">Pump</span>
             </div>
-        -->
+        </div>
     </div>
     <!-- Valve 1 -->
     <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
         <div class="col-sm-4 flow">
-            <div class="container" id="stat_vv1" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #1</span></div>
+            <div class="container" id="stat_vv1" style="border-radius:10px;background-color:@StateStyle(RecentValues.Valve1) ;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #1</span></div>
         </div>
         <div class="col-2 flow" style="text-align: right; padding-top:7px">
-            <span class="text" id="txt_Flow1">---ml</span>
+            <span class="text" id="txt_Flow1">@Flow1_Text</span>
         </div>
         <div class="col flow" style="padding-top: 7px;">
-            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow1" style="width:70%"></div></div>
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow1" style="width:@Flow1_Perc"></div></div>
         </div>
     </div>
     <!-- Valve 2 -->
     <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
         <div class="col-sm-4 flow">
-            <div class="container" id="stat_vv2" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #2</span></div>
+            <div class="container" id="stat_vv2" style="border-radius:10px;background-color:@StateStyle(RecentValues.Valve2) ;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #2</span></div>
         </div>
         <div class="col-2 flow" style="text-align: right; padding-top:7px">
-            <span class="text" id="txt_Flow2">---ml</span>
+            <span class="text" id="txt_Flow2">@Flow2_Text</span>
         </div>
         <div class="col flow" style="padding-top: 7px;">
-            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow1" style="width:70%"></div></div>
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow1" style="width:@Flow2_Perc"></div></div>
         </div>
     </div>
     <!-- Valve 3 -->
     <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
         <div class="col-sm-4 flow">
-            <div class="container" id="stat_vv3" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #3</span></div>
+            <div class="container" id="stat_vv3" style="border-radius:10px;background-color:@StateStyle(RecentValues.Valve3) ;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #3</span></div>
         </div>
         <div class="col-2 flow" style="text-align: right; padding-top:7px">
-            <span class="text" id="txt_Flow3">---ml</span>
+            <span class="text" id="txt_Flow3">@Flow3_Text</span>
         </div>
         <div class="col flow" style="padding-top: 7px;">
-            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow3" style="width:70%"></div></div>
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow3" style="width:@Flow3_Perc"></div></div>
         </div>
     </div>
     <!-- Valve 4 -->
     <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
         <div class="col-sm-4 flow">
-            <div class="container" id="stat_vv4" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #4</span></div>
+            <div class="container" id="stat_vv4" style="border-radius:10px;background-color:@StateStyle(RecentValues.Valve4) ;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #4</span></div>
         </div>
         <div class="col-2 flow" style="text-align: right; padding-top:7px">
-            <span class="text" id="txt_Flow4">---ml</span>
+            <span class="text" id="txt_Flow4">@Flow4_Text</span>
         </div>
         <div class="col flow" style="padding-top: 7px;">
-            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow4" style="width:70%"></div></div>
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow4" style="width:@Flow4_Perc"></div></div>
         </div>
     </div>
     <!-- Valve 5 -->
     <div class="row" style="border-top-style: solid; border-color: lightgray; border-width: 0.7px;">
         <div class="col-sm-4 flow">
-            <div class="container" id="stat_vv5" style="border-radius:10px;background-color:crimson;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #5</span></div>
+            <div class="container" id="stat_vv5" style="border-radius:10px;background-color:@StateStyle(RecentValues.Valve5) ;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Valve #5</span></div>
         </div>
         <div class="col-2 flow" style="text-align: right; padding-top:7px">
-            <span class="text" id="txt_Flow5">---ml</span>
+            <span class="text" id="txt_Flow5">@Flow5_Text</span>
         </div>
         <div class="col flow" style="padding-top: 7px;">
-            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow5" style="width:70%"></div></div>
+            <div class="progress"><div class="progress-bar" role="progressbar" id="prog_Flow5" style="width:@Flow5_Perc"></div></div>
         </div>
     </div>
 
@@ -100,5 +103,50 @@
 </style>
 
 @code {
+    private string Flow1_Text = "---ml";
+    private string Flow1_Perc = "%";
+    private string Flow2_Text = "---ml";
+    private string Flow2_Perc = "%";
+    private string Flow3_Text = "---ml";
+    private string Flow3_Perc = "%";
+    private string Flow4_Text = "---ml";
+    private string Flow4_Perc = "%";
+    private string Flow5_Text = "---ml";
+    private string Flow5_Perc = "%";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(delegate { Globals.GUI.HasChanged_slow += Update; });
+    }        
+
+    private void Update()
+    {
+        Flow1_Text = RecentValues.Flow1.ToString() + "ml";
+        Flow1_Perc = Math.Floor((RecentValues.Flow1 / 2500.0) * 100)+"%";
+        Flow2_Text = RecentValues.Flow2.ToString() + "ml";
+        Flow2_Perc = Math.Floor((RecentValues.Flow2 / 2500.0) * 100)+"%";
+        Flow3_Text = RecentValues.Flow3.ToString() + "ml";
+        Flow3_Perc = Math.Floor((RecentValues.Flow3 / 2500.0) * 100)+"%";
+        Flow4_Text = RecentValues.Flow4.ToString() + "ml";
+        Flow4_Perc = Math.Floor((RecentValues.Flow4 / 2500.0) * 100)+"%";
+        Flow5_Text = RecentValues.Flow5.ToString() + "ml";
+        Flow5_Perc = Math.Floor((RecentValues.Flow5 / 2500.0) * 100)+"%";
+
+        InvokeAsync(() => { StateHasChanged(); });
+    }
+
+    private string StateStyle(bool status)
+    {
+        if (status)
+            return "forestgreen";
+        else
+            return "crimson";
+    }
+
+    public void Dispose()
+    {
+        Globals.GUI.HasChanged_slow -= Update;
+    }
 
 }

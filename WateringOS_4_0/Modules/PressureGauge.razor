@@ -1,6 +1,9 @@
 ﻿@namespace WateringOS_4_0.Pages
 
+@implements IDisposable
+
 @using Syncfusion.Blazor.CircularGauge
+@using WateringOS_4_0.Models
 
 <div class="control-section" id="target" style="padding-top:2em;width:100%;height:100%">
     <SfCircularGauge Height="95%">
@@ -16,7 +19,7 @@
                     <CircularGaugeRange Start="0" End="10" Radius="100%" StartWidth="30" EndWidth="30" Color="#E0E0E0" RoundedCornerRadius="20" />
                 </CircularGaugeRanges>
                 <CircularGaugePointers>
-                    <CircularGaugePointer Value="@vPress" RoundedCornerRadius="20" Type="PointerType.RangeBar" Radius="100%" Color="@PointerColor" PointerWidth="30">
+                    <CircularGaugePointer Value="@RecentValues.Pressure" RoundedCornerRadius="20" Type="PointerType.RangeBar" Radius="100%" Color="@PointerColor" PointerWidth="30">
                         <CircularGaugePointerAnimation Enable="false" />
                         <CircularGaugePointerBorder Color="grey" Width="0.01" />
                     </CircularGaugePointer>
@@ -24,7 +27,7 @@
                 <CircularGaugeAnnotations>
                     <CircularGaugeAnnotation Radius="0%" Angle="0" ZIndex="1">
                         <ContentTemplate>
-                            <div class="annotationText">@vPress</div>
+                            <div class="annotationText">@RecentValues.Pressure.ToString("0.0")</div>
                             <div class="annotationSubText">bar</div>
                         </ContentTemplate>
                     </CircularGaugeAnnotation>
@@ -56,16 +59,26 @@
 
 @code {
     private string PointerColor = "#038c9a";
-    private double vPress = 1.6;
 
-    private void SetPressure(double Pressure)
+    protected override async Task OnInitializedAsync()
     {
-        vPress = Pressure;
+        await Task.Run(delegate { Globals.GUI.HasChanged_fast += Update; });
+    }    
 
-        // use Min & Max Pressure
-        if (vPress <= 2) { PointerColor = "#FFCA28"; }
-        else if (vPress >= 6) { PointerColor = "#ea501a"; }
+    private void Update()
+    {
+        double MinPress = Globals.SystemSettings.FirstOrDefault(x => x.Name == "ALM_min_pressure").Value / 1000;
+        double MaxPress = Globals.SystemSettings.FirstOrDefault(x => x.Name == "ALM_max_pressure").Value / 1000;
+
+        if (RecentValues.Pressure <= MinPress) { PointerColor = "#FFCA28"; }
+        else if (RecentValues.Pressure >= MaxPress) { PointerColor = "#ea501a"; }
         else { PointerColor = "#038c9a"; }
 
+        InvokeAsync(() => { StateHasChanged(); });
+    }
+
+    public void Dispose()
+    {
+        Globals.GUI.HasChanged_fast -= Update;
     }
 }

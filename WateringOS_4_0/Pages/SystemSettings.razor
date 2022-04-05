@@ -9,15 +9,12 @@
 @using System.ComponentModel;
 @using WateringOS_4_0.Models;
 
-@inject Services.SettingsService SettingsService
-
-
 <h2 style="margin-bottom:1.2em;">System Settings</h2>
 
 <div class="control-section">
-    <SfGrid DataSource="@SettingsService.Settings" AllowGrouping="true" Toolbar="@(new List<string>() { "Update", "Cancel" })">
+    <SfGrid DataSource="@Globals.SystemSettings" AllowGrouping="true" Toolbar="@(new List<string>() { "Update", "Cancel" })">
         <GridGroupSettings Columns=@GroupedColumns ShowDropArea="false" />
-        <GridEvents OnToolbarClick="ToolbarClickHandler" CellSaved="CellSaved" OnActionComplete="ActionComplete" TValue="SettingsModel" />
+        <GridEvents OnToolbarClick="ToolbarClickHandler" CellSaved="CellSaved" TValue="SettingsModel" />
         <GridEditSettings AllowEditing="true" Mode="EditMode.Batch" ShowConfirmDialog="false">
             <Template>
                 @{
@@ -99,25 +96,14 @@
 </style>
 
 @code {
-    //SfGrid<SettingsModel> GridInstance { get; set; }
 
     public string[] GroupedColumns = new string[] { "Group" };
 
     public Dictionary<string, object> ChangeList = new Dictionary<string, object>();
 
-    //public IEditorSettings StringEditParams = new StringEditCellParams { Params = new TextBoxModel() { Readonly = true } };
-    //public IEditorSettings NumberEditParams = new NumericEditCellParams { Params = new NumericTextBoxModel<object>() {  } };
-
-    protected override async Task OnInitializedAsync()
-    {
-        SettingsService.LoadSettings();
-    }
-
     async Task CellSaved(CellSaveArgs<SettingsModel> CellArgs)
     {
-        Console.WriteLine(CellArgs.RowData.Name + ": " + CellArgs.PreviousValue + " -> " + CellArgs.Value);
         ChangeList.Add(CellArgs.RowData.Name, CellArgs.Value);
-        // Update SettingsCollection
     }
 
     public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
@@ -126,21 +112,18 @@
         {
             foreach (var vItem in ChangeList)
             {
-                Console.WriteLine("    "+vItem);
+                var nItem= Globals.SystemSettings.FirstOrDefault(x => x.Name == vItem.Key);
+                if (nItem != null) { nItem.Value = (int)vItem.Value; }
             }
             ChangeList.Clear();
-            // Write to File 
+
+            Globals.SaveSettings();
         }
         else if (args.Item.Text == "Cancel")
         {
-            Console.WriteLine("ReadFromFile()");
             ChangeList.Clear();
-            //SettingsService.LoadSettings();
+            Globals.LoadSettings();
         }
-    }
-
-    private void ActionComplete(ActionEventArgs<SettingsModel> args)
-    {
-        //
+        StateHasChanged();
     }
 }

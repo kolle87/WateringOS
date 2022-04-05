@@ -1,8 +1,10 @@
 ﻿@inherits LayoutComponentBase
+
 @inject Services.AccountService AccountService
 @inject ProtectedSessionStorage SessionStorage
 @inject NavigationManager NavigationManager
 @inject Services.IAlertService AlertService
+
 @implements IDisposable
 
 <div class="page" id="main">
@@ -13,12 +15,7 @@
     <div class="main">
         <div class="top-row px-4" style="padding-left: 0px !important;">
             <div class="col" style="padding-left:0px">
-                @if (ActiveAlarm)
-                {
-                    <NavLink class="nav-link" @onclick="ShowAlarms" style="color: crimson; cursor: pointer">
-                        <span class="oi oi-bell" aria-hidden="true" style="padding-right:1em"></span>@LatestAlarm
-                    </NavLink>
-                }
+                <WateringOS_4_0.Pages.ActiveAlarm />
             </div>
             <ul class="nav flex-column">
                 
@@ -56,11 +53,10 @@
                     <tbody>
                         <tr>
                             <td style="text-align:right"><p style="font-size:0.8em; margin: 0px 0px 0px 0px">Version:</p></td>
-                            <td style="width:120px"><p style="font-size:0.8em; margin: 0px 1em 0px 0px">@Version</p></td>
+                            <td style="width:120px"><p style="font-size:0.8em; margin: 0px 1em 0px 0px">@Globals.Version.Display</p></td>
                         </tr>
                         <tr>
-                            <td style="text-align:right"><p style="font-size:0.8em; margin: 0px 0px 0px 0px">Uptime:</p></td>
-                            <td style="width:120px"><p style="font-size:0.8em; margin: 0px 1em 0px 0px">@Uptime</p></td>
+                            <WateringOS_4_0.Pages.ServerUptime />
                         </tr>
                     </tbody>
                 </table>
@@ -73,13 +69,6 @@
 
     private string Fingerprint = "";
     private bool authorized = false;
-    private bool ActiveAlarm = false;
-    private string LatestAlarm = "New Alarm Text";
-
-    [Parameter]
-    public string Version { get; set; } = "-.-.- ---";
-    [Parameter]
-    public string Uptime { get; set; } = "--d --:--:--";
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,9 +86,9 @@
         await Task.Run(delegate { AccountService.AccountLogout += OnUserLogout; });
     }
 
-    public void ShowAlarms()
+    private void Update()
     {
-        //NavigationManager.NavigateTo("/auth/login?returnUrl=" + returnUrl);
+        InvokeAsync(() => StateHasChanged());
     }
 
     public void Logout()

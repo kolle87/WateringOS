@@ -1,7 +1,8 @@
-﻿@page "/fetchdata"
+﻿@page "/users"
 @namespace WateringOS_4_0.Pages
 
 @using System.Threading
+@using WateringOS_4_0.Loggers
 @inject ProtectedSessionStorage SessionStorage
 @inject Services.AccountService AccountService
 @inject NavigationManager NavigationManager
@@ -37,13 +38,13 @@
 
         if (AccountService.IsAuthorized(result.Value))
         {
-            Console.WriteLine("Users: {0} logged in", result.Value);
+            Logger.Post(Logger.WEB, LogType.Information, "User "+result.Value+" entered ADMIN page -Users-", "New user logged in with administrator level.");
             await Task.Run(delegate { AccountService.AccountLogin += OnUserLogin; });
             await Task.Run(delegate { AccountService.AccountLogout += OnUserLogout; });
         }
         else
         {
-            Console.WriteLine("Users: {0} needs to authenticate", result.Value);
+            Logger.Post(Logger.WEB, LogType.Information, "User "+result.Value+" needs to authenticate", "A user wants to access admin level page (Users).");
             var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             NavigationManager.NavigateTo("/auth/login?returnUrl=" + returnUrl);
         }
@@ -55,6 +56,6 @@
         AccountService.AccountLogout -= OnUserLogout;
     }
 
-    public void OnUserLogin() { InvokeAsync(() => StateHasChanged()); }
-    public void OnUserLogout() { InvokeAsync(() => StateHasChanged()); }
+    private void OnUserLogin() { InvokeAsync(() => StateHasChanged()); }
+    private void OnUserLogout() { InvokeAsync(() => StateHasChanged()); }
 }

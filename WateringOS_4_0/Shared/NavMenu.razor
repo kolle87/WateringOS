@@ -4,57 +4,62 @@
 
 @using Syncfusion.Blazor.Navigations
 
+<WateringOS_4_0.Pages.ConfirmReboot @ref="ChildComponent" />
+
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Watering OS 4.0</a>
+    <div>
+        <a class="navbar-brand" href="">Watering OS 4.0</a>
+    </div>
+    
     <button class="navbar-toggler" @onclick=ToggleNavMenu>
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
-<div class=@NavMenuCssClass @onclick=ToggleNavMenu>
+<div class=@NavMenuCssClass >
     <ul class="nav flex-column">
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All" @onclick=HideSubmenu>
                 <span class="oi oi-home" aria-hidden="true"></span> Overview
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="journal">
+            <NavLink class="nav-link" href="journal" @onclick=HideSubmenu>
                 <span class="oi oi-excerpt" aria-hidden="true"></span> Journal
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="trend_level">
+            <NavLink class="nav-link" href="trend_level" @onclick=HideSubmenu>
                 <span class="oi oi-graph" aria-hidden="true"></span> Level
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="trend_environment">
+            <NavLink class="nav-link" href="trend_environment" @onclick=HideSubmenu>
                 <span class="oi oi-graph" aria-hidden="true"></span> Environment
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="trend_power">
+            <NavLink class="nav-link" href="trend_power" @onclick=HideSubmenu>
                 <span class="oi oi-graph" aria-hidden="true"></span> Power
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="trend_watering">
+            <NavLink class="nav-link" href="trend_watering" @onclick=HideSubmenu>
                 <span class="oi oi-graph" aria-hidden="true"></span> Watering
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
+            <NavLink class="nav-link" href="manualcontrol" @onclick=HideSubmenu>
                 <span class="oi oi-dashboard" aria-hidden="true"></span> Manual Control <span class="badge badge-secondary" style="margin-left:1em">Admin</span>
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-wrench" aria-hidden="true"></span> Setting <span class="badge badge-secondary" style="margin-left:1em">Admin</span>
+            <NavLink class="nav-link" href="preferences" @onclick=HideSubmenu>
+                <span class="oi oi-wrench" aria-hidden="true"></span> Preferences <span class="badge badge-secondary" style="margin-left:1em">Admin</span>
             </NavLink>
         </li>
         <li class="nav-item dropdown px-3">
-            <NavLink class="nav-link dropdown-toggle" role="button" @onclick=ToggleSubMenu style="cursor: pointer;">
+            <NavLink class="nav-link dropdown-toggle" id="system_submenu" role="button" @onclick=ShowSubmenu style="cursor: pointer;">
                 <span class="oi oi-wrench" aria-hidden="true"></span> System <span class="badge badge-secondary" style="margin-left:1em">Admin</span>
             </NavLink>
             <div hidden=@collapseSubMenu>
@@ -62,13 +67,13 @@
                     <NavLink class="nav-link subitem" href="systemsettings">
                         <span>System Settings</span>
                     </NavLink>
-                    <NavLink class="nav-link" href="journal">
+                    <NavLink class="nav-link" href="system_log">
                         <span>System Log</span>
                     </NavLink>
-                    <NavLink class="nav-link" href="fetchdata">
+                    <NavLink class="nav-link" href="users">
                         <span>Current Users</span>
                     </NavLink>
-                    <NavLink class="nav-link" href="fetchdata">
+                    <NavLink class="nav-link" style="cursor: pointer" @onclick=ShowRebootConfirmation>
                         <span>Reboot System</span>
                     </NavLink>
                 </div>
@@ -79,18 +84,36 @@
 
 @code {
     private bool collapseNavMenu = true;
-    private bool collapseSubMenu = true;
+    private bool collapseSubMenu = true;   
+    protected WateringOS_4_0.Pages.ConfirmReboot ChildComponent;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
-        collapseSubMenu = collapseNavMenu;
+        //collapseSubMenu = collapseNavMenu;
     }
 
-    private void ToggleSubMenu()
+    private void HideNavMenu()
     {
+        collapseNavMenu = true;
+    }
+
+    private void HideSubmenu()
+    {
+        //collapseSubMenu = true;
+        HideNavMenu();
+    }
+
+    private void ShowSubmenu()
+    {
+        //collapseSubMenu = false;
         collapseSubMenu = !collapseSubMenu;
+    }
+
+    private void ShowRebootConfirmation()
+    {
+        ChildComponent.Show();
     }
 }

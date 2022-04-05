@@ -1,8 +1,9 @@
 ﻿@using Syncfusion.Blazor.Charts
 @using Syncfusion.Blazor
+@using WateringOS_4_0.Services
 @using WateringOS_4_0.Models
 @using System.Collections.ObjectModel
-@inject Services.WateringLogService WateringLogService
+
 @namespace WateringOS_4_0.Pages
 
 <div class="control-section" style="height:100%">
@@ -40,20 +41,20 @@
         <ChartTooltipSettings Enable="true" Shared="true" Header="${point.x}" Format="${series.name} : ${point.y}" />
 
         <ChartSeriesCollection>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="StateAxis" Name="Valve1" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve1)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#007bff"><ChartSeriesBorder Width="2" Color="#0D47A1" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="StateAxis" Name="Valve2" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve2)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#2E7D32"><ChartSeriesBorder Width="2" Color="#1B5E20" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="StateAxis" Name="Valve3" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve3)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#FF8F00"><ChartSeriesBorder Width="2" Color="#CC3300" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="StateAxis" Name="Valve4" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve4)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#7B1FA2"><ChartSeriesBorder Width="2" Color="#330099" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="StateAxis" Name="Valve5" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve5)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#0277BD"><ChartSeriesBorder Width="2" Color="#220088" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="StateAxis" Name="Pump" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Pump)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#D32F2F"><ChartSeriesBorder Width="2" Color="#550000" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="StateAxis" Name="Valve1" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve1)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#007bff"><ChartSeriesBorder Width="2" Color="#0D47A1" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="StateAxis" Name="Valve2" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve2)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#2E7D32"><ChartSeriesBorder Width="2" Color="#1B5E20" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="StateAxis" Name="Valve3" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve3)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#FF8F00"><ChartSeriesBorder Width="2" Color="#CC3300" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="StateAxis" Name="Valve4" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve4)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#7B1FA2"><ChartSeriesBorder Width="2" Color="#330099" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="StateAxis" Name="Valve5" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Valve5)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#0277BD"><ChartSeriesBorder Width="2" Color="#220088" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="StateAxis" Name="Pump" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Pump)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#D32F2F"><ChartSeriesBorder Width="2" Color="#550000" /></ChartSeries>
 
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="FlowAxis" Name="Flow1" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow1)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#007bff"><ChartSeriesBorder Width="2" Color="#0D47A1" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="FlowAxis" Name="Flow2" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow2)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#2E7D32"><ChartSeriesBorder Width="2" Color="#1B5E20" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="FlowAxis" Name="Flow3" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow3)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#FF8F00"><ChartSeriesBorder Width="2" Color="#CC3300" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="FlowAxis" Name="Flow4" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow4)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#7B1FA2"><ChartSeriesBorder Width="2" Color="#330099" /></ChartSeries>
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" YAxisName="FlowAxis" Name="Flow5" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow5)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#0277BD"><ChartSeriesBorder Width="2" Color="#220088" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="FlowAxis" Name="Flow1" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow1)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#007bff"><ChartSeriesBorder Width="2" Color="#0D47A1" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="FlowAxis" Name="Flow2" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow2)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#2E7D32"><ChartSeriesBorder Width="2" Color="#1B5E20" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="FlowAxis" Name="Flow3" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow3)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#FF8F00"><ChartSeriesBorder Width="2" Color="#CC3300" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="FlowAxis" Name="Flow4" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow4)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#7B1FA2"><ChartSeriesBorder Width="2" Color="#330099" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" YAxisName="FlowAxis" Name="Flow5" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Flow5)" Opacity="0.5" Type="ChartSeriesType.Area" Fill="#0277BD"><ChartSeriesBorder Width="2" Color="#220088" /></ChartSeries>
 
-            <ChartSeries DataSource="@WateringLogService.WateringLog3" Name="Pressure" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Pressure)" Opacity="0.7" Type="ChartSeriesType.Area" Fill="#007bff"><ChartSeriesBorder Width="2" Color="#0D47A1" /></ChartSeries>
+            <ChartSeries DataSource="@_WateringLog3" Name="Pressure" XName="@nameof(WateringModel.TimeStamp)" YName="@nameof(WateringModel.Pressure)" Opacity="0.7" Type="ChartSeriesType.Area" Fill="#007bff"><ChartSeriesBorder Width="2" Color="#0D47A1" /></ChartSeries>
         </ChartSeriesCollection>
 
         <ChartLegendSettings Visible="false" />
@@ -76,13 +77,24 @@
     [Parameter]
     public Action<string> UpdateTrendDate { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private ObservableCollection<WateringModel> _WateringLog3 = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        if (firstRender)
-        {
-            DateTime vCurDT = new DateTime(WateringLogService.WateringLog3.First().TimeStamp.Year, WateringLogService.WateringLog3.First().TimeStamp.Month, WateringLogService.WateringLog3.First().TimeStamp.Day);
-            UpdateTrendDate(vCurDT.ToString("d. MMMM"));
-        }
+        await Task.Run(delegate { WateringLogService.PushLog3 += LoadLog; });
+        WateringLogService.RequestLog(); // -> PushLog -> LoadLog   
+        UpdateTrendDate = GetTimeStamp;
+    }
+
+    private void LoadLog(ObservableCollection<WateringModel> _received)
+    {
+        _WateringLog3 = _received;
+        UpdateTrendDate(_WateringLog3.First().TimeStamp.ToString("ddd dd MMM HH:mm"));
+    }
+
+    private void GetTimeStamp(string v)
+    {
+        v = _WateringLog3.First().TimeStamp.ToString("ddd dd MMM HH:mm");
     }
 
 }

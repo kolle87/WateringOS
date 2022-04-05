@@ -1,0 +1,33 @@
+﻿@namespace WateringOS_4_0.Pages
+
+@inject NavigationManager NavigationManager
+
+@using Services
+
+<NavLink class="nav-link" @onclick="ShowAlarms" style="color: crimson; cursor: pointer">
+    @if (AlarmService.ActiveAlarms.Count>0)
+    {
+        <span class="oi oi-bell" style="padding-right:1em"></span>@LatestAlarm
+    }
+</NavLink>
+
+@code {
+    private string LatestAlarm = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(delegate { AlarmService.OnAlarm += UpdateAlarm; });
+        LatestAlarm = AlarmService.ActiveAlarms.Last().Name + " (+" + (AlarmService.ActiveAlarms.Count-1) + ")";
+    }   
+
+    private void UpdateAlarm(AlarmService.Alarm _alarm)
+    {
+        LatestAlarm = AlarmService.ActiveAlarms.Last().Name + " (+" + (AlarmService.ActiveAlarms.Count-1) + ")";
+        StateHasChanged();
+    }
+
+    private void ShowAlarms()
+    {
+        NavigationManager.NavigateTo("/alarms");
+    }
+}

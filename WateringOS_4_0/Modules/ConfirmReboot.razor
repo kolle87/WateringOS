@@ -1,0 +1,79 @@
+﻿@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using WateringOS_4_0.Models
+@using System.Collections.ObjectModel
+
+@namespace WateringOS_4_0.Pages
+
+<SfDialog Width="350px" Height="200px" Target="#main" IsModal="true" @bind-Visible="Visibility">
+	<DialogTemplates>
+		<Content>
+			<h5>Are you sure to reboot the System?</h5>
+		</Content>
+	</DialogTemplates>
+	<DialogButtons>
+		<DialogButton Content="Yes" OnClick="@DlgOkClick" />
+		<DialogButton Content="Cancel" IsPrimary="true" OnClick="@DlgCancelClick" />
+	</DialogButtons>
+	<DialogAnimationSettings Effect="@DialogEffect.None"></DialogAnimationSettings>
+</SfDialog>
+
+<style>
+    .content {
+        height: calc(100% - 220px);
+    }
+
+    .e-control {
+        height: 100%;
+    }
+
+	.header-border {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		border-top: 3px solid #2684ff
+	}
+
+	.e-dialog .e-btn.e-flat, .e-css.e-btn.e-flat {
+		color: whitesmoke !important;
+		width: 64px;
+	}
+
+	.e-btn.e-danger, .e-css.e-btn.e-danger {
+		background-color: #fff !important;
+		border-color: #dc3545;
+		color: #dc3545 !important;
+	}
+
+	.e-btn.e-success, .e-css.e-btn.e-success {
+		background-color: #28a745;
+		border-color: #28a745;
+		color: #fff !important;
+	}
+
+</style>
+
+@code{
+	private bool Visibility = false;
+
+	public void Show()
+	{
+		this.Visibility = true;
+		StateHasChanged();
+	}
+
+	private void DlgOkClick()
+	{
+		// Do Reboot + don't hide, but show loading animation
+		this.Visibility = false;
+	}
+
+	private void DlgCancelClick()
+	{	
+		this.Visibility = false;
+	}
+}
+

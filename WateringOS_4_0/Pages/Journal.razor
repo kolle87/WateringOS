@@ -8,7 +8,7 @@
 @using System.ComponentModel;
 @using WateringOS_4_0.Models;
 
-@inject Services.LogService LogService
+@inject Services.JournalService LogService
 
 
 <h2 style="margin-bottom:1.2em;">Log Journal</h2>
@@ -26,7 +26,7 @@
 </div>
 
 <div class="control-section">
-    <SfGrid @ref="journal" DataSource="@LogService.JournalLog" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
+    <SfGrid @ref="journal" DataSource="@_JournalLog" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
         <GridEvents OnRecordClick="RecordClickHandler" TValue="LogModel"></GridEvents>
         <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu" />
         <GridPageSettings PageCount="5" PageSize="15" PageSizes="new int[]{ 15, 50, 100 }" />
@@ -36,7 +36,7 @@
             </GridSortColumns>
         </GridSortSettings>
         <GridColumns>
-            <GridColumn Field=@nameof(LogModel.TimeStamp) HeaderText="Time Stamp" Width="250" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" Type="ColumnType.DateTime" Format="dd/MMM/yyyy hh:mm:ss.fff" IsPrimaryKey="true" />
+            <GridColumn Field=@nameof(LogModel.TimeStamp) HeaderText="Time Stamp" Width="250" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left" Type="ColumnType.DateTime" Format="dd/MMM/yyyy HH:mm:ss.fff" IsPrimaryKey="true" />
             <GridColumn Field=@nameof(LogModel.Type) HeaderText="Type" Width="120" TextAlign="TextAlign.Center" HeaderTextAlign="TextAlign.Center" FilterSettings="@(new FilterSettings{Type = Syncfusion.Blazor.Grids.FilterType.CheckBox })">
                 <Template>
                     @{
@@ -85,7 +85,7 @@
                     }
                 </Template>
             </GridColumn>
-            <GridColumn Field=@nameof(LogModel.Message) HeaderText="Message" TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left">
+            <GridColumn Field=@nameof(LogModel.Message) HeaderText="Message" AutoFit=true TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left">
                 <Template>
                     @{
                         var currentLog = (context as LogModel);
@@ -104,6 +104,11 @@
 
                         </SfTooltip>
                     }
+                </Template>
+            </GridColumn>
+            <GridColumn Field=@nameof(LogModel.App) HeaderText="" AutoFit=true TextAlign="TextAlign.Left" HeaderTextAlign="TextAlign.Left">
+                <Template>
+                    <span></span>
                 </Template>
             </GridColumn>
         </GridColumns>
@@ -135,6 +140,7 @@
 @code {
 
     private SfGrid<LogModel> journal { get; set; }
+    private ObservableCollection<LogModel> _JournalLog;
     private int Count { get; set; } = 0;
 
     private string TypeStatus = "btn btn-secondary btn-sm";
@@ -147,7 +153,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LogService.LoadJournal();
+        await Task.Run(delegate { LogService.PushJournal += LoadJournal; LogService.AddToJournal += AddLog; });
+        LogService.RequestJournal(); // -> Push Journal() -> Load Journal()
+    }
+
+    private void LoadJournal(ObservableCollection<LogModel> _received)
+    {
+        _JournalLog = _received;
+    }
+    private void AddLog(LogModel _received)
+    {
+        _JournalLog.Add(_received);
     }
 
     private void FilterStatus()
@@ -167,7 +183,6 @@
             journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
         }
     }
-
     private void FilterInfo()
     {
         if (TypeInfo == "btn btn-info btn-sm")
@@ -185,7 +200,6 @@
             journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
         }
     }
-
     private void FilterAlarm()
     {
         if (TypeWarning == "btn btn-warning btn-sm")
@@ -204,7 +218,6 @@
         }
         journal.RefreshColumns();
     }
-
     private void FilterError()
     {
         if (TypeError == "btn btn-danger btn-sm")
@@ -222,7 +235,6 @@
             journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
         }
     }
-
     private void FilterFatal()
     {
         if (TypeFatal == "btn btn-danger btn-sm")

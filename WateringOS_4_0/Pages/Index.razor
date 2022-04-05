@@ -1,5 +1,8 @@
 ﻿@page "/"
+
 @using Syncfusion.Blazor.Layouts
+@using WateringOS_4_0.Models
+
 @namespace WateringOS_4_0.Pages
 
 
@@ -10,7 +13,7 @@
     <!-- Row 1 -->
     <div class="row" style="padding-bottom: 2rem;">
         <div class="col-sm-12">
-            <p>Last updated: <span class="text" id="txt_TimeStamp">--/--/---- --:--:--.---</span></p>
+            <RecentTimestamp />
         </div>
     </div>
 
@@ -20,11 +23,11 @@
         <div class="col-sm-4" style="padding-bottom: 30px;">
             <div class="row" style="height: 100%;">
                 <!-- Tank -->
-                <div class="col-6" style="min-width: 200px">
+                <div class="col-6" style="min-width: 200px; min-height: 250px">
                     <TankLevel />
                 </div>
                 <!-- Pressure -->
-                <div class="col-6" style="min-width: 200px">
+                <div class="col-6" style="min-width: 200px; min-height: 250px">
                     <PressureGauge />
                 </div>
             </div>
@@ -51,7 +54,6 @@
         </div>
     </div>
 </div>
-
 
 @{
 }
