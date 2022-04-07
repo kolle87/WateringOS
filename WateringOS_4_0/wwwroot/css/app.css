@@ -8,3 +8,7 @@
     margin-bottom: 50px !important;
     min-width: 420px !important;
 }
+
+.e-toolbar-items {
+    display: flex;
+}

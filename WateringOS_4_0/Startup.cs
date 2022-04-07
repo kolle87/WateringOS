@@ -29,7 +29,7 @@ namespace WateringOS_4_0
             services.AddServerSideBlazor();
             services.AddSyncfusionBlazor();
             services.AddSingleton<AccountService>();
-            //services.AddSingleton<JournalService>();
+            services.AddSingleton<JournalService>();
             services.AddSingleton<OperatorService>();
             services.AddScoped<IAlertService, AlertService>();
         }
@@ -37,7 +37,7 @@ namespace WateringOS_4_0
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NDMyNDEzQDMxMzkyZTMxMmUzMGdLZmdRclB0TitRYmRqblVubFlvbmxET3VUeWdDek1MMGtla3NvTE5hRG89");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjA4NTIzQDMyMzAyZTMxMmUzMFFqRW9TY1N4Zlk3NC8zTG5JNzFSV2V5YlJxeGpMOGZPSWRwOTk3Z3Nxb2M9");
 
             if (env.IsDevelopment())
             {

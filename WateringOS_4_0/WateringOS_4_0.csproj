@@ -17,12 +17,13 @@
     <PackageReference Include="Iot.Device.Bindings" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />
-    <PackageReference Include="Syncfusion.Blazor" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.Blazor" Version="20.1.0.47" />
     <PackageReference Include="System.Device.Gpio" Version="2.1.0" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="call python &quot;$(ProjectDir)version.py&quot; &quot;$(VersionPrefix)&quot; &quot;$(Configuration)&quot; &quot;$(ProjectDir)$(OutDir)&quot;" />
+    <Exec Command="python3 &quot;$(ProjectDir)version.py&quot; &quot;$(VersionPrefix)&quot; &quot;$(Configuration)&quot; &quot;$(ProjectDir)$(OutDir)&quot;" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <Exec Command="call python &quot;$(ProjectDir)version.py&quot; &quot;$(VersionPrefix)&quot; &quot;$(Configuration)&quot; &quot;$(ProjectDir)$(OutDir)&quot;" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
   </Target>
 
 </Project>

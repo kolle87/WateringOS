@@ -44,6 +44,7 @@ namespace WateringOS_4_0
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://*:8001");
                 });
     }
 }
