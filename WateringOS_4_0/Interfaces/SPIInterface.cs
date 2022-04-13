@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Device.Spi;
+using System.Threading.Tasks;
 using WateringOS_4_0.Loggers;
 using WateringOS_4_0.Services;
 
@@ -12,11 +13,11 @@ namespace WateringOS_4_0.Interfaces
         private static bool IsBusy = false;
         private static int FailureCount = 0;
         public static bool IsInitialized { get; private set; } = false;
-        public static byte Flow1 { get; private set; }
-        public static byte Flow2 { get; private set; }
-        public static byte Flow3 { get; private set; }
-        public static byte Flow4 { get; private set; }
-        public static byte Flow5 { get; private set; }
+        public static int Flow1 { get; private set; }
+        public static int Flow2 { get; private set; }
+        public static int Flow3 { get; private set; }
+        public static int Flow4 { get; private set; }
+        public static int Flow5 { get; private set; }
         public static byte Rain { get; private set; }
         public static byte Ground { get; private set; }
         public static byte LevelRaw { get; private set; }
@@ -34,9 +35,11 @@ namespace WateringOS_4_0.Interfaces
                 AtMega_Settings.Mode = SpiMode.Mode3;    // Mode3: CPOL = 1, CPHA = 1
                 AtMega32A = SpiDevice.Create(AtMega_Settings);
                 FailureCount = 0;
+                Logger.Post(Logger.SPI, LogType.Information, "Initialization finished", "Initialization of SPI interface finished");
                 AlarmService.SPI_InitialisationFail.Deactivate();
                 AlarmService.SPI_InterfaceFail.Deactivate();
                 IsInitialized = true;
+                Read();
             }
             catch (Exception e)
             {
@@ -67,11 +70,11 @@ namespace WateringOS_4_0.Interfaces
 
                     if (ReadBuf[12] == vCRC)
                     {
-                        Flow1 = ReadBuf[2];
-                        Flow2 = ReadBuf[3];
-                        Flow3 = ReadBuf[4];
-                        Flow4 = ReadBuf[5];
-                        Flow5 = ReadBuf[6];
+                        Flow1 = ReadBuf[2] * 10;
+                        Flow2 = ReadBuf[3] * 10;
+                        Flow3 = ReadBuf[4] * 10;
+                        Flow4 = ReadBuf[5] * 10;
+                        Flow5 = ReadBuf[6] * 10;
                         Rain = ReadBuf[7];
                         LevelRaw = ReadBuf[8];
                         Pressure = ReadBuf[9] * 0.049;
@@ -93,7 +96,7 @@ namespace WateringOS_4_0.Interfaces
                 if (FailureCount > 5)
                 {
                     IsInitialized = false;
-                    Logger.Post(Logger.SPI, LogType.Error, "Failure count high - deinitialized", "Several read attemps failed. SPI Controller has been deinitialized.");
+                    Logger.Post(Logger.SPI, LogType.Error, "Failure count high - deinitialized", "Several read attempts failed. SPI Controller has been deinitialized.");
                     AlarmService.SPI_InterfaceFail.Activate();
                 }
                 IsBusy = false;
@@ -101,11 +104,20 @@ namespace WateringOS_4_0.Interfaces
         }
         public void ResetFlow()
         {
+            Logger.Post(Logger.SPI, LogType.Debug, "Command: ResetFlow()", "The command to reset flow volumes was received.");
+            byte maxWait = 0;
+            while (IsBusy && (maxWait < 20))
+            {
+                maxWait++;
+                Logger.Post(Logger.SYS, LogType.Debug, $"SPI-line busy waiting ({maxWait})", $"ResetFlow() triggered but line is busy. Retry {maxWait}/20");
+                var t_wait = Task.Run(async delegate { await Task.Delay(50); });
+                t_wait.Wait();
+            }
             if (IsBusy)
             {
-                Logger.Post(Logger.SPI, LogType.Warning, "ResetFlow() - SPI busy", "Read() - SPI busy");
+                Logger.Post(Logger.SPI, LogType.Warning, "ResetFlow() - SPI busy", $"Read() - SPI busy. Retried {maxWait} times.");
             }
-            else if (!IsInitialized)
+            if (!IsInitialized)
             {
                 Logger.Post(Logger.SPI, LogType.Warning, "ResetFlow() - SPI Interface is not initialized", "SPI Interface is not ready to read.");
             }
@@ -121,17 +133,20 @@ namespace WateringOS_4_0.Interfaces
                     AtMega32A.TransferFullDuplex(SendCmd, AckData);
                     if (AckData[2] == 0x06)
                     {
+                        Logger.Post(Logger.SPI, LogType.Information, "Flows were reset", "The flow volumes were successfully reset.");
                         FailureCount--;
                     }
                     else
                     {
-                        Logger.Post(Logger.SPI, LogType.Error, "Not received acknowledge", "The command was not acknoledged by the slave.");
+                        Logger.Post(Logger.SPI, LogType.Error, "Not received acknowledge", "The command was not acknowledged by the slave.");
                     }
+                    IsBusy = false;
                 }
                 catch (Exception e)
                 {
                     Logger.Post(Logger.SPI, LogType.Error, "Error sending Atmega reset command", e.Message);
                     FailureCount++;
+                    IsBusy = false;
                 }
             }
         }

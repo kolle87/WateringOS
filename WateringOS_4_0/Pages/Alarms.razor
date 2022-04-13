@@ -13,7 +13,7 @@
 <h6 style="margin-bottom:1.5em;">Currently active alarms</h6>
 
 <div class="control-section">
-    <SfGrid @ref="alarmlist" DataSource="@_Alarms" AllowPaging="true" AllowSorting="true">
+    <SfGrid DataSource="@_Alarms" AllowPaging="true" AllowSorting="true">
         <GridEvents OnRecordClick="RecordClickHandler" TValue="AlarmService.Alarm"></GridEvents>
         <GridPageSettings PageCount="5" PageSize="15" PageSizes="new int[]{ 15, 50, 100 }" />
         <GridSortSettings>
@@ -79,7 +79,6 @@
 </style>
 
 @code {
-    private SfGrid<AlarmService.Alarm> alarmlist { get; set; }
     private ObservableCollection<AlarmService.Alarm> _Alarms;
 
     protected override async Task OnInitializedAsync()
@@ -91,7 +90,7 @@
     private void Update(ObservableCollection<AlarmService.Alarm> _received)
     {
         _Alarms = _received;
-        StateHasChanged();
+        InvokeAsync(() => StateHasChanged());
     }
 
     private void RecordClickHandler()

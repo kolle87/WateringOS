@@ -27,11 +27,9 @@ namespace WateringOS_4_0.Services
         {
             PushLog?.Invoke(PowerLog);
         }
-
-        public static void AddLogAndUpdate(PowerModel _PowerModel)
+        public static async  Task CleanPowerLog()
         {
-            PowerLog.Add(_PowerModel);
-            AddToLog?.Invoke(_PowerModel);
+            while (PowerLog.Count > 10080) { PowerLog.RemoveAt(0); }
         }
     }
 }

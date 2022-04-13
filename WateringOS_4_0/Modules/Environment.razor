@@ -14,10 +14,11 @@
     </div>
     <div class="row">
         <div class="col-fixed env">Ground:</div>
-        <div class="col-auto env" ><span class="text" id="stat_Ground">@RecentValues.Ground</span></div>
+        <div class="col-auto env" ><span class="text" id="stat_Ground">@RecentValues.Ground / @Interfaces.SPIInterface.Ground</span></div>
     </div>
     <div class="row">
-        <div class="col-12"><p></p></div>
+        <div class="col-fixed env">Tank(raw):</div>
+        <div class="col-auto env" ><span class="text" id="stat_tank">@Interfaces.SPIInterface.LevelRaw</span></div>
     </div>
     <div class="row">
         <div class="col-12"><p></p></div>

@@ -13,11 +13,12 @@ namespace WateringOS_4_0.Loggers
         public static LogParent DIO = new() { Name = "DIO" };
         public static LogParent TWI = new() { Name = "TWI" };
         public static LogParent SPI = new() { Name = "SPI" };
+        public static LogParent WAT = new() { Name = "WAT" };
         public static void Post(LogParent _Sender, string _Type, string _Message, string _Details)
         {
             switch (_Type)
             {
-                case LogType.Status:
+                case LogType.Debug:
                     _Sender.Parent.LogDebug(_Message);
                     break;
                 case LogType.Information:
@@ -49,7 +50,7 @@ namespace WateringOS_4_0.Loggers
     }
     public class LogType
     {
-        public const string Status = "Status";
+        public const string Debug = "Debug";
         public const string Information = "Information";
         public const string Warning = "Warning";
         public const string Error = "Error";

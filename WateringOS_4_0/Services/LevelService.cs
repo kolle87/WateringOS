@@ -19,7 +19,11 @@ namespace WateringOS_4_0.Services
         }
         public static void SaveLevelLog()
         {
-            File.WriteAllText(@"usrdata/SavedLogs/JournalLog.json", JsonConvert.SerializeObject(LevelLog));
+            File.WriteAllText(@"usrdata/SavedLogs/LevelLog.json", JsonConvert.SerializeObject(LevelLog));
+        }
+        public static async  Task CleanLevelLog()
+        {
+            while (LevelLog.Count > 10080) { LevelLog.RemoveAt(0); }
         }
     }
 }

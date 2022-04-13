@@ -290,13 +290,13 @@
 	private void Apply()
 	{
 		Globals.SavePreferences();
-		StateHasChanged();
+		InvokeAsync(() => StateHasChanged());
 	}
 
 	private void Discard()
 	{
 		Globals.LoadPreferences();
-		StateHasChanged();
+		InvokeAsync(() => StateHasChanged());
 	}
 
 }

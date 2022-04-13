@@ -9,7 +9,6 @@
     protected override async Task OnInitializedAsync()
     {
         await Task.Run(delegate { Globals.GUI.HasChanged_slow += Update; });
-
     }        
     private void Update()
     {

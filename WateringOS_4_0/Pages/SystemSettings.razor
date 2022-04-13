@@ -124,6 +124,6 @@
             ChangeList.Clear();
             Globals.LoadSettings();
         }
-        StateHasChanged();
+        InvokeAsync(() => StateHasChanged());
     }
 }

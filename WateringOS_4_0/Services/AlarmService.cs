@@ -102,14 +102,14 @@ namespace WateringOS_4_0.Services
             ID = 1021,
             IsActive = false,
             Name = "Initialization Fail - DIO Interface",
-            Description = "A failure occured while trying to initialize the SPI Interface"
+            Description = "A failure occured while trying to initialize the DIO Interface"
         };
         public static Alarm DIO_InterfaceFail = new()
         {
             ID = 1022,
             IsActive = false,
             Name = "Interface Fail - DIO Interface",
-            Description = "A failure while using the SPI Interface. Several operations failed."
+            Description = "A failure while using the DIO Interface. Several operations failed."
         };
         #endregion
     }

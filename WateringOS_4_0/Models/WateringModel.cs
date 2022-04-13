@@ -22,7 +22,7 @@ namespace WateringOS_4_0.Models
         public byte Valve4 { get; set; }
         public byte Valve5 { get; set; }
         public double Pressure { get; set; }
-        public int TempCPU { get; set; }
+        public double TempCPU { get; set; }
 
         public byte PowerGood_5V { get; set; }
         public byte PowerGood_12V { get; set; }

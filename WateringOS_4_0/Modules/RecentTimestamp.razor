@@ -4,25 +4,20 @@
 
 @using WateringOS_4_0.Models
 
-<p>Last updated: <span class="text" id="txt_TimeStamp">@TimestamtToString()</span></p>
+<p>Last updated: <span class="text" id="txt_TimeStamp">@LastTimestamp</span></p>
 
 @code {
-
-    private string TimestamtToString()
-    {
-        return RecentValues.TimeStamp.ToString("dd/MMM/yyyy HH:mm:ss.fff");
-    }
+    private string LastTimestamp;
 
     protected override async Task OnInitializedAsync()
     {
         await Task.Run(delegate { Globals.GUI.HasChanged_fast += Update; });
-
     }        
     private void Update()
     {
+        LastTimestamp = RecentValues.TimeStamp.ToString("dd/MMM/yyyy HH:mm:ss.fff");
         InvokeAsync(() => StateHasChanged());
     }
-
     public void Dispose()
     {
         Globals.GUI.HasChanged_fast -= Update;

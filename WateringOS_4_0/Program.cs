@@ -1,3 +1,4 @@
+using System.Timers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,6 +21,7 @@ namespace WateringOS_4_0
             Logger.DIO.Parent = Server.Host.Services.GetRequiredService<ILogger<Interfaces.DIOInterface>>();
             Logger.TWI.Parent = Server.Host.Services.GetRequiredService<ILogger<Interfaces.TWIInterface>>();
             Logger.SPI.Parent = Server.Host.Services.GetRequiredService<ILogger<Interfaces.SPIInterface>>();
+            Logger.WAT.Parent = Server.Host.Services.GetRequiredService<ILogger<Watering>>();
 
             Simulator.SetInitalValues();
 
@@ -33,6 +35,12 @@ namespace WateringOS_4_0
 
             Version.Load();
             Interface.Initialize();
+            UpdateRecents(true);
+
+            Routines.LogLevel(null, null);
+            Routines.LogEnvironment(null, null);
+            Routines.LogPower(null, null);
+            
             Schedulers.Initialize();
 
             Server.Host.Run();

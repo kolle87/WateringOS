@@ -10,8 +10,8 @@ namespace WateringOS_4_0.Services
         private static readonly HistogramConfiguration HistogramSuppressInitialValue = new() { SuppressInitialValue = true };
 
         public static readonly Histogram Duration_UpdateRecents = Metrics.CreateHistogram("watering_sys_taskduration_updaterecents", "Records the task duration of UpdateRecents()", HistogramSuppressInitialValue);
-        public static readonly Histogram Duration_MainTask = Metrics.CreateHistogram("watering_sys_taskduration_maintask", "Records the task duration of MainTask()", HistogramSuppressInitialValue);
-        public static readonly Histogram Duration_FastTask = Metrics.CreateHistogram("watering_system_taskduration_fasttask", "Records the task duration of FastTask()", HistogramSuppressInitialValue);
+        public static readonly Histogram Duration_ReadTWI = Metrics.CreateHistogram("watering_sys_taskduration_readtwi", "Records the task duration of TWI.Read()", HistogramSuppressInitialValue);
+        public static readonly Histogram Duration_ReadSPI = Metrics.CreateHistogram("watering_system_taskduration_readspi", "Records the task duration of SPI-Read()", HistogramSuppressInitialValue);
         public static readonly Histogram Duration_EnvSave = Metrics.CreateHistogram("watering_system_taskduration_envlogsave", "Records the duration taken to store the Environment Log", HistogramSuppressInitialValue);
         public static readonly Histogram Duration_LevelSave = Metrics.CreateHistogram("watering_system_taskduration_levellogsave", "Records the duration taken to store the Level Log", HistogramSuppressInitialValue);
         public static readonly Histogram Duration_JournalSave = Metrics.CreateHistogram("watering_system_taskduration_journalsave", "Records the duration taken to store the Journal", HistogramSuppressInitialValue);
@@ -39,6 +39,7 @@ namespace WateringOS_4_0.Services
         private static readonly Gauge BoardTemperature   = Metrics.CreateGauge("watering_env_temppcb", "Board Temperature", GaugeSuppressInitialValue);
         private static readonly Gauge Rain               = Metrics.CreateGauge("watering_env_rain", "Rain Sensor", GaugeSuppressInitialValue);
         private static readonly Gauge Ground             = Metrics.CreateGauge("watering_env_ground", "Soil Moisture Sensor", GaugeSuppressInitialValue);
+        private static readonly Gauge GroundGardena      = Metrics.CreateGauge("watering_env_ground_gardena", "Soil Moisture Sensor (Reference from Gardena)", GaugeSuppressInitialValue);
 
         private static readonly Gauge CPUTemperature = Metrics.CreateGauge("watering_sys_tempcpu", "CPU Temperature", GaugeSuppressInitialValue);
         private static readonly Gauge PowerGood_5V = Metrics.CreateGauge("watering_sys_pg5", "5V not LOW", GaugeSuppressInitialValue);
@@ -72,6 +73,7 @@ namespace WateringOS_4_0.Services
             BoardTemperature.Set(RecentValues.TempPCB);
             Rain.Set(RecentValues.Rain);
             Ground.Set(RecentValues.Ground);
+            GroundGardena.Set(Interfaces.SPIInterface.Ground);
 
             CPUTemperature.Set(RecentValues.TempCPU);
             PowerGood_5V.Set(RecentValues.PowerGood_5V ? 1 : 0);

@@ -9,19 +9,19 @@
     <h5>Temperatures</h5>
     <div class="row">
         <div class="col-fixed temp">Ambient:</div>
-        <div class="col-auto temp" ><span class="text" id="stat_Amb">@RecentValues.TempAmb °C</span></div>
+        <div class="col-auto temp" ><span class="text" id="stat_Amb">@String.Format("{0:F1}°C", RecentValues.TempAmb)</span></div>
     </div>
     <div class="row">
         <div class="col-fixed temp">Exposed:</div>
-        <div class="col-auto temp" ><span class="text" id="stat_Exp">@RecentValues.TempExp °C</span></div>
+        <div class="col-auto temp" ><span class="text" id="stat_Exp">@String.Format("{0:F1}°C", RecentValues.TempExp)</span></div>
     </div>
     <div class="row">
         <div class="col-fixed temp">Board:</div>
-        <div class="col-auto temp" ><span class="text" id="stat_Board">@RecentValues.TempPCB °C</span></div>
+        <div class="col-auto temp" ><span class="text" id="stat_Board">@String.Format("{0:F1}°C", RecentValues.TempPCB)</span></div>
     </div>
     <div class="row">
         <div class="col-fixed temp">CPU:</div>
-        <div class="col-auto temp" ><span class="text" id="stat_CPU">@RecentValues.TempCPU °C</span></div>
+        <div class="col-auto temp" ><span class="text" id="stat_CPU">@String.Format("{0:F1}°C", RecentValues.TempCPU)</span></div>
     </div>
     <div class="row">
         <div class="col-12"><p></p></div>

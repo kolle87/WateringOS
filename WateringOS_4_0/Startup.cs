@@ -27,7 +27,10 @@ namespace WateringOS_4_0
             });
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSyncfusionBlazor();
+            services.AddSyncfusionBlazor(options =>
+            {
+                options.IgnoreScriptIsolation = true;
+            });
             services.AddSingleton<AccountService>();
             services.AddSingleton<JournalService>();
             services.AddSingleton<OperatorService>();

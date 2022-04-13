@@ -17,17 +17,29 @@
     protected override async Task OnInitializedAsync()
     {
         await Task.Run(delegate { AlarmService.OnAlarm += UpdateAlarm; });
-        LatestAlarm = AlarmService.ActiveAlarms.Last().Name + " (+" + (AlarmService.ActiveAlarms.Count-1) + ")";
+        LatestAlarm = GetLatestAlarm();
     }   
 
     private void UpdateAlarm(AlarmService.Alarm _alarm)
     {
-        LatestAlarm = AlarmService.ActiveAlarms.Last().Name + " (+" + (AlarmService.ActiveAlarms.Count-1) + ")";
-        StateHasChanged();
+        LatestAlarm = GetLatestAlarm();
+        InvokeAsync(() => StateHasChanged());
     }
 
     private void ShowAlarms()
     {
         NavigationManager.NavigateTo("/alarms");
+    }
+
+    private string GetLatestAlarm()
+    {        
+        try
+        {
+            return String.Format("{0} (+{1})",AlarmService.ActiveAlarms.Last().Name,AlarmService.ActiveAlarms.Count-1);
+        }
+        catch
+        {
+            return "";
+        }
     }
 }

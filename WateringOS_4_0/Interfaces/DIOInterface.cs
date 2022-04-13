@@ -54,6 +54,7 @@ namespace WateringOS_4_0.Interfaces
                 SetPin(PIN_DO_Valve4, false); // DO_Valve4
                 SetPin(PIN_DO_Valve5, false); // DO_Valve5
                 FailureCount = 0;   
+                Logger.Post(Logger.DIO, LogType.Information, "Initialization finished", "Initialization of DIO interface finished");
                 AlarmService.DIO_InitialisationFail.Deactivate();
                 AlarmService.DIO_InterfaceFail.Deactivate();
                 IsInitialized = true;
@@ -93,9 +94,9 @@ namespace WateringOS_4_0.Interfaces
         public static bool PowerGood_5V { get { return (GetPin(PIN_DI_PG5)); } }
         public static bool PowerGood_12V { get { return (GetPin(PIN_DI_PG12)); } }
         public static bool PowerGood_24V { get { return (GetPin(PIN_DI_PG24)); } }
-        public static bool PowerFail_5V { get { return (GetPin(PIN_DI_PF5)); } }
-        public static bool PowerFail_12V { get { return (GetPin(PIN_DI_PF12)); } }
-        public static bool PowerFail_24V { get { return (GetPin(PIN_DI_PF24)); } }
+        public static bool PowerFail_5V { get { return (!GetPin(PIN_DI_PF5)); } }
+        public static bool PowerFail_12V { get { return (!GetPin(PIN_DI_PF12)); } }
+        public static bool PowerFail_24V { get { return (!GetPin(PIN_DI_PF24)); } }
         public static bool PumpActive { get { return (GetPin(PIN_DO_Pump)); } }
         public static bool Valve1Open { get { return (GetPin(PIN_DO_Valve1)); } }
         public static bool Valve2Open { get { return (GetPin(PIN_DO_Valve2)); } }

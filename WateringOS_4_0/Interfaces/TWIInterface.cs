@@ -32,24 +32,24 @@ namespace WateringOS_4_0.Interfaces
 
         public void Initialize()
         {
-            Logger.Post(Logger.TWI, LogType.Information, "Start initialisation", "The intialization of the TWI communication class has started.");
+            Logger.Post(Logger.TWI, LogType.Information, "Start initialization", "The initialization of the TWI communication class has started.");
             try
             {
                 int FailCount = 0;
                 // Initialize Board Temperature Sensor (DS1621)
                 try
                 {
-                    Logger.Post(Logger.TWI, LogType.Information, "0x48: Loading slave", "Loading slave settings for 0x48 (PCB temperature sensor) and starting interface");
+                    Logger.Post(Logger.TWI, LogType.Debug, "0x48: Loading slave", "Loading slave settings for 0x48 (PCB temperature sensor) and starting interface");
                     settings1 = new I2cConnectionSettings(1, 0x48); // CPU Temperature
                     TWI_TempBoard = I2cDevice.Create(settings1);
                     Wait(100);
 
-                    Logger.Post(Logger.TWI, LogType.Information, "0x48: Setting configuration register", "Setting the configuration register to continues measuring");
+                    Logger.Post(Logger.TWI, LogType.Debug, "0x48: Setting configuration register", "Setting the configuration register to continues measuring");
                     var vACh = new byte[] { 0xAC, 0x00 };    // Access config set 0x00 (continues meas)
                     TWI_TempBoard.Write(vACh);
                     Wait(100);
 
-                    Logger.Post(Logger.TWI, LogType.Information, "0x48: Start temperature conversion", "Sending command to start continues temperature conversion");
+                    Logger.Post(Logger.TWI, LogType.Debug, "0x48: Start temperature conversion", "Sending command to start continues temperature conversion");
                     var vEEh = new byte[] { 0xEE };    // Send 0xEE for start conversion
                     TWI_TempBoard.Write(vEEh);
                     Wait(100);
@@ -65,7 +65,7 @@ namespace WateringOS_4_0.Interfaces
                 // Initialize Ambient Temperature Sensor (LM75)
                 try
                 {
-                    Logger.Post(Logger.TWI, LogType.Information, "0x4F: Loading slave", "Loading slave settings for 0x4F (ambient temperature sensor) and starting interface");
+                    Logger.Post(Logger.TWI, LogType.Debug, "0x4F: Loading slave", "Loading slave settings for 0x4F (ambient temperature sensor) and starting interface");
                     settings2 = new I2cConnectionSettings(1, 0x4F);   // Ambient Temperature
                     TWI_TempAmbient = I2cDevice.Create(settings2);
                     Wait(100);
@@ -81,7 +81,7 @@ namespace WateringOS_4_0.Interfaces
                 // Initialize Exposed Temperature Sensor (LM75)
                 try
                 {
-                    Logger.Post(Logger.TWI, LogType.Information, "0x4B: Loading slave", "Loading slave settings for 0x4B (exposed temperature sensor) and starting interface");
+                    Logger.Post(Logger.TWI, LogType.Debug, "0x4B: Loading slave", "Loading slave settings for 0x4B (exposed temperature sensor) and starting interface");
                     settings3 = new I2cConnectionSettings(1, 0x4B);   // Exposed Temperature
                     TWI_TempExposed = I2cDevice.Create(settings3);
                     Wait(100);
@@ -97,7 +97,7 @@ namespace WateringOS_4_0.Interfaces
                 // Initialize Ground Sensor (Arduino Nano)
                 try
                 {
-                    Logger.Post(Logger.TWI, LogType.Information, "0x56: Loading slave", "Loading slave settings for 0x56 (ground sensor) and starting interface");
+                    Logger.Post(Logger.TWI, LogType.Debug, "0x56: Loading slave", "Loading slave settings for 0x56 (ground sensor) and starting interface");
                     settings4 = new I2cConnectionSettings(1, 0x56);
                     TWI_Ground = I2cDevice.Create(settings4);
                     Wait(100);
@@ -118,6 +118,7 @@ namespace WateringOS_4_0.Interfaces
                 ReadGround();       Wait(100);
                 ReadBoardTemp();    Wait(100);
 
+                Logger.Post(Logger.TWI, LogType.Information, "Initialization finished", String.Format("Initialization of TWI interface finished with {0} failures and status {1}",FailCount,IsInitialized));
                 IsInitialized = true;
                 AlarmService.TWI_InitialisationFail.Deactivate();
                 AlarmService.TWI_InterfaceFail.Deactivate();
@@ -128,7 +129,7 @@ namespace WateringOS_4_0.Interfaces
                 AlarmService.TWI_InitialisationFail.Activate();
             }
         }
-        public void TWI_Read()
+        public void Read()
         {
             if (IsInitialized)
             {
@@ -168,8 +169,9 @@ namespace WateringOS_4_0.Interfaces
                     var vASa = new byte[2];
                     TWI_TempBoard.Write(vASr);
                     TWI_TempBoard.Read(vASa);
-                    _BoardTemp = (sbyte)vASa[0];
-                
+                    //_BoardTemp = (sbyte)vASa[0];
+                    _BoardTemp = ConvertTemperature(vASa[0], vASa[1]);
+                    
                     IsBusy = false;
                     BoardTemperature.FailureCount--;
                     BoardTemperature.Available = true;
@@ -202,8 +204,9 @@ namespace WateringOS_4_0.Interfaces
                     var vASa = new byte[2];
                     TWI_TempAmbient.Write(vASr);
                     TWI_TempAmbient.Read(vASa);
-                    _AmbientTemp = (sbyte)vASa[0];
-
+                    //_AmbientTemp = (sbyte)vASa[0];
+                    _AmbientTemp = ConvertTemperature(vASa[0], vASa[1]);
+                    
                     IsBusy = false;
                     AmbientTemperature.FailureCount--;
                     AmbientTemperature.Available = true;
@@ -236,7 +239,8 @@ namespace WateringOS_4_0.Interfaces
                     var vASa = new byte[2];
                     TWI_TempExposed.Write(vASr);
                     TWI_TempExposed.Read(vASa);
-                    _ExposedTemp = (sbyte)(vASa[0]);
+                    //_ExposedTemp = (sbyte)(vASa[0]);
+                    _ExposedTemp = ConvertTemperature(vASa[0], vASa[1]);
 
                     IsBusy = false;
                     ExposedTemperature.FailureCount--;
@@ -268,8 +272,9 @@ namespace WateringOS_4_0.Interfaces
                     IsBusy = true; 
                     var vASa = new byte[2];
                     TWI_Ground.Read(vASa);
-                    _Ground = (vASa[0] * 256) + vASa[1];
-
+                    //_Ground = (vASa[0] * 256) + vASa[1];
+                    _Ground = ToInt16(vASa[0], vASa[1]);
+                    
                     IsBusy = false;
                     SoilMoisture.FailureCount--;
                     SoilMoisture.Available = true;
@@ -281,6 +286,16 @@ namespace WateringOS_4_0.Interfaces
                 SoilMoisture.FailureCount++;
             }
             SoilMoisture.Value = _Ground;
+        }
+        private double ConvertTemperature(int MSB, int LSB)
+        {
+            var temp_signed = -(MSB & 0x80) | (MSB & 0x7f);
+            var half_deg = 0.5 * ((LSB & 128) >> 7);
+            return (temp_signed + half_deg);
+        }
+        private int ToInt16(int MSB, int LSB)
+        {
+            return (MSB * 256 + LSB);
         }
         private void CheckSensorStatus()
         {

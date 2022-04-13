@@ -3,15 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>6084a227-1a59-46a3-8a75-f79209fd73b6</UserSecretsId>
-    <Copyright></Copyright>
+    <Copyright>Michael Kollmeyer</Copyright>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-	  <VersionPrefix>4.0.1</VersionPrefix>
+    <VersionPrefix>4.0.1</VersionPrefix>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="version.dat" />
-    <None Remove="version.py" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Iot.Device.Bindings" Version="2.1.0" />
@@ -19,10 +14,33 @@
     <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />
     <PackageReference Include="Syncfusion.Blazor" Version="20.1.0.47" />
     <PackageReference Include="System.Device.Gpio" Version="2.1.0" />
+
+    <None Remove="version.py" />
+    <None Update="version.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Remove="usrdata\systemsettings.json" />
+    <Content Remove="usrdata\watering_settings.json" />
+    <Content Remove="usrdata\SavedLogs\EnvironmentLog.json" />
+    <Content Remove="usrdata\SavedLogs\JournalLog.json" />
+    <Content Remove="usrdata\SavedLogs\LevelLog.json" />
+    <Content Remove="usrdata\SavedLogs\PowerLog.json" />
+    <Content Remove="usrdata\SavedLogs\Watering1Log.json" />
+    <Content Remove="usrdata\SavedLogs\Watering2Log.json" />
+    <Content Remove="usrdata\SavedLogs\Watering3Log.json" />
+    <None Include="usrdata\systemsettings.json" />
+    <None Include="usrdata\watering_settings.json" />
+    <None Include="usrdata\SavedLogs\EnvironmentLog.json" />
+    <None Include="usrdata\SavedLogs\JournalLog.json" />
+    <None Include="usrdata\SavedLogs\LevelLog.json" />
+    <None Include="usrdata\SavedLogs\PowerLog.json" />
+    <None Include="usrdata\SavedLogs\Watering1Log.json" />
+    <None Include="usrdata\SavedLogs\Watering2Log.json" />
+    <None Include="usrdata\SavedLogs\Watering3Log.json" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="python3 &quot;$(ProjectDir)version.py&quot; &quot;$(VersionPrefix)&quot; &quot;$(Configuration)&quot; &quot;$(ProjectDir)$(OutDir)&quot;" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <Exec Command="python3 &quot;$(ProjectDir)version.py&quot; &quot;$(VersionPrefix)&quot; &quot;$(Configuration)&quot; &quot;$(ProjectDir)$(OutDir)&quot;" Condition="$(RuntimeIdentifier.StartsWith('linux-'))" />
     <Exec Command="call python &quot;$(ProjectDir)version.py&quot; &quot;$(VersionPrefix)&quot; &quot;$(Configuration)&quot; &quot;$(ProjectDir)$(OutDir)&quot;" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
   </Target>
 

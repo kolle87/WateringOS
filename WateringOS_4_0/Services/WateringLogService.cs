@@ -6,11 +6,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using WateringOS_4_0.Models;
 using System.Collections.ObjectModel;
+using Prometheus;
+using WateringOS_4_0.Loggers;
 
 namespace WateringOS_4_0.Services
 {
     public class WateringLogService
     {
+        public static ObservableCollection<WateringModel> WateringLogTmp = new ObservableCollection<WateringModel>();
         public static ObservableCollection<WateringModel> WateringLog1 = new ObservableCollection<WateringModel>();
         public static ObservableCollection<WateringModel> WateringLog2 = new ObservableCollection<WateringModel>();
         public static ObservableCollection<WateringModel> WateringLog3 = new ObservableCollection<WateringModel>();
@@ -33,10 +36,17 @@ namespace WateringOS_4_0.Services
         }
         public static void ShiftLogs()
         {
-            WateringLog3 = WateringLog2;
-            WateringLog2 = WateringLog1;
+            Logger.Post(Logger.WAT, LogType.Debug, "Shifting watering logs", "Procedure for rotating watering logs was called.");
+            WateringLog3.Clear();
+            foreach (var item in WateringLog2) { WateringLog3.Add(item); }
+            WateringLog2.Clear();
+            foreach (var item in WateringLog1) { WateringLog2.Add(item); }
             WateringLog1.Clear();
+            foreach (var item in WateringLogTmp) { WateringLog1.Add(item); }
+            WateringLogTmp.Clear();
             RequestLog();
+            using (PrometheusService.Duration_WateringSave.NewTimer()) 
+            { SaveWateringLogs();}
         }
         public static void RequestLog()
         {

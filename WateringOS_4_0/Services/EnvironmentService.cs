@@ -20,7 +20,11 @@ namespace WateringOS_4_0.Services
         }
         public static void SaveEnvironmentLog()
         {
-            File.WriteAllText(@"usrdata/SavedLogs/JournalLog.json", JsonConvert.SerializeObject(EnvironmentLog));
-        }        
+            File.WriteAllText(@"usrdata/SavedLogs/EnvironmentLog.json", JsonConvert.SerializeObject(EnvironmentLog));
+        }      
+        public static async  Task CleanEnvironmentLog()
+        {
+            while (EnvironmentLog.Count > 10080) { EnvironmentLog.RemoveAt(0); }
+        }  
     }
 }

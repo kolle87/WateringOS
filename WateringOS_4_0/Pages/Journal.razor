@@ -17,7 +17,7 @@
         <h5 style="padding-top: 3px;">Filter:</h5>
     </div>
     <div class="col">
-        <button class=@TypeStatus type="button" style="cursor: pointer" @onclick=FilterStatus>Status</button>
+        <button class=@TypeDebug type="button" style="cursor: pointer" @onclick=FilterDebug>Debug</button>
         <button class=@TypeInfo type="button" style="cursor: pointer" @onclick=FilterInfo>Information</button>
         <button class=@TypeWarning type="button" style="cursor: pointer" @onclick=FilterAlarm>Warning</button>
         <button class=@TypeError type="button" style="cursor: pointer" @onclick=FilterError>Error</button>
@@ -41,38 +41,41 @@
                 <Template>
                     @{
                         var currentLog = (context as LogModel);
-                        switch (currentLog.Type.ToString())
+                        if (currentLog != null)
                         {
-                            case "Status":
+                            switch (currentLog.Type)
+                            {
+                                case "Debug":
                                 {
                                     <span class="badge badge-secondary" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
                                 }
-                                break;
-                            case "Information":
+                                    break;
+                                case "Information":
                                 {
                                     <span class="badge badge-info" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
                                 }
-                                break;
-                            case "Warning":
+                                    break;
+                                case "Warning":
                                 {
                                     <span class="badge badge-warning" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
                                 }
-                                break;
-                            case "Error":
+                                    break;
+                                case "Error":
                                 {
                                     <span class="badge badge-danger" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
                                 }
-                                break;
-                            case "Fatal":
+                                    break;
+                                case "Fatal":
                                 {
                                     <span class="badge badge-danger" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
                                 }
-                                break;
-                            default:
+                                    break;
+                                default:
                                 {
                                     <span class="badge badge-secondary" style="padding:0.4em 1em 0.4em 1em; width:90px">@currentLog.Type</span>
                                 }
-                                break;
+                                    break;
+                            }
                         }
                     }
                 </Template>
@@ -143,7 +146,7 @@
     private ObservableCollection<LogModel> _JournalLog;
     private int Count { get; set; } = 0;
 
-    private string TypeStatus = "btn btn-secondary btn-sm";
+    private string TypeDebug = "btn btn-secondary btn-sm";
     private string TypeInfo = "btn btn-info btn-sm";
     private string TypeWarning = "btn btn-warning btn-sm";
     private string TypeError = "btn btn-danger btn-sm";
@@ -166,19 +169,19 @@
         _JournalLog.Add(_received);
     }
 
-    private void FilterStatus()
+    private void FilterDebug()
     {
-        if (TypeStatus == "btn btn-secondary btn-sm")
+        if (TypeDebug == "btn btn-secondary btn-sm")
         {
-            TypeStatus = "btn btn-outline-secondary btn-sm";
-            FilterList.Remove("Status");
+            TypeDebug = "btn btn-outline-secondary btn-sm";
+            FilterList.Remove("Debug");
             journal.ClearFiltering();
             journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
         }
         else
         {
-            TypeStatus = "btn btn-secondary btn-sm";
-            FilterList.Add("Status");
+            TypeDebug = "btn btn-secondary btn-sm";
+            FilterList.Add("Debug");
             journal.ClearFiltering();
             journal.FilterByColumn(nameof(LogModel.Type), "equal", FilterList, "or");
         }

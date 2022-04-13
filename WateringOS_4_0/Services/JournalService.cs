@@ -32,5 +32,9 @@ namespace WateringOS_4_0.Services
             JournalLog.Add(_LogModel);
             AddToJournal?.Invoke(_LogModel);
         }
+        public static async  Task CleanJournalLog()
+        {
+            while (JournalLog.Count > 800) { JournalLog.RemoveAt(0); }
+        }
     }
 }
