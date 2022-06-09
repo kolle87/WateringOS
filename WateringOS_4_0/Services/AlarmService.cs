@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using WateringOS_4_0.Loggers;
 
 namespace WateringOS_4_0.Services
 {
@@ -20,12 +21,14 @@ namespace WateringOS_4_0.Services
                 this.IsActive = true;
                 ActiveAlarms.Add(this);
                 OnAlarm?.Invoke(this);
+                Logger.Post(Logger.SYS, LogType.Information, "ALARM ACTIVATED - "+this.Name, this.Description);
             }
             public void Deactivate()
             {
                 this.IsActive = false;
                 ActiveAlarms.Remove(this);
                 OnAlarm?.Invoke(this);
+                //Logger.Post(Logger.SYS, LogType.Information, "ALARM DEACTIVATED - "+this.Name, this.Description);
             }
         }
        
@@ -56,28 +59,28 @@ namespace WateringOS_4_0.Services
             ID = 1012,
             IsActive = false,
             Name = "Sensor Fail - Board Temperature",
-            Description = "A failure occured while trying to read the Board temperatur"
+            Description = "A failure occured while trying to read the Board temperature"
         };
         public static Alarm TWI_SensFail_AmbientTemperatur = new()
         {
             ID = 1013,
             IsActive = false,
             Name = "Sensor Fail - Ambient Temperature",
-            Description = "A failure occured while trying to read the Board temperatur"
+            Description = "A failure occured while trying to read the Board temperature"
         };
         public static Alarm TWI_SensFail_ExposedTemperatur = new()
         {
             ID = 1014,
             IsActive = false,
             Name = "Sensor Fail - Exposed Temperature",
-            Description = "A failure occured while trying to read the Board temperatur"
+            Description = "A failure occured while trying to read the Board temperature"
         };
         public static Alarm TWI_SensFail_SoilMoisture = new()
         {
             ID = 1015,
             IsActive = false,
             Name = "Sensor Fail - Soil Moisture Temperature",
-            Description = "A failure occured while trying to read the Board temperatur"
+            Description = "A failure occured while trying to read the Board temperature"
         };
         #endregion
         #region SPI Alarms

@@ -155,7 +155,8 @@ namespace WateringOS_4_0.Interfaces
             {
                 if (IsBusy)
                 {
-                    Logger.Post(Logger.TWI, LogType.Warning, "ReadBoardTemp() - TWI busy", "ReadGround() - TWI busy");
+                    BoardTemperature.FailureCount++;
+                    Logger.Post(Logger.TWI, LogType.Warning, "ReadBoardTemp() - TWI busy", "ReadBoardTemp() - TWI busy");
                 }
                 else if (!BoardTemperature.Available)
                 {
@@ -169,7 +170,6 @@ namespace WateringOS_4_0.Interfaces
                     var vASa = new byte[2];
                     TWI_TempBoard.Write(vASr);
                     TWI_TempBoard.Read(vASa);
-                    //_BoardTemp = (sbyte)vASa[0];
                     _BoardTemp = ConvertTemperature(vASa[0], vASa[1]);
                     
                     IsBusy = false;
@@ -191,7 +191,8 @@ namespace WateringOS_4_0.Interfaces
             {
                 if (IsBusy)
                 {
-                    Logger.Post(Logger.TWI, LogType.Warning, "ReadAmbientTemp() - TWI busy", "ReadGround() - TWI busy");
+                    AmbientTemperature.FailureCount++;
+                    Logger.Post(Logger.TWI, LogType.Warning, "ReadAmbientTemp() - TWI busy", "ReadAmbientTemp() - TWI busy");
                 }
                 else if (!AmbientTemperature.Available)
                 {
@@ -204,7 +205,6 @@ namespace WateringOS_4_0.Interfaces
                     var vASa = new byte[2];
                     TWI_TempAmbient.Write(vASr);
                     TWI_TempAmbient.Read(vASa);
-                    //_AmbientTemp = (sbyte)vASa[0];
                     _AmbientTemp = ConvertTemperature(vASa[0], vASa[1]);
                     
                     IsBusy = false;
@@ -226,7 +226,8 @@ namespace WateringOS_4_0.Interfaces
             {
                 if (IsBusy)
                 {
-                    Logger.Post(Logger.TWI, LogType.Warning, "ReadExposedTemp() - TWI busy", "ReadGround() - TWI busy");
+                    ExposedTemperature.FailureCount++;
+                    Logger.Post(Logger.TWI, LogType.Warning, "ReadExposedTemp() - TWI busy", "ReadExposedTemp() - TWI busy");
                 }
                 else if (!ExposedTemperature.Available)
                 {
@@ -239,7 +240,6 @@ namespace WateringOS_4_0.Interfaces
                     var vASa = new byte[2];
                     TWI_TempExposed.Write(vASr);
                     TWI_TempExposed.Read(vASa);
-                    //_ExposedTemp = (sbyte)(vASa[0]);
                     _ExposedTemp = ConvertTemperature(vASa[0], vASa[1]);
 
                     IsBusy = false;
@@ -261,6 +261,7 @@ namespace WateringOS_4_0.Interfaces
             {
                 if (IsBusy)
                 {
+                    SoilMoisture.FailureCount++;
                     Logger.Post(Logger.TWI, LogType.Warning, "ReadGround() - TWI busy", "ReadGround() - TWI busy");
                 }
                 else if (!SoilMoisture.Available)
@@ -272,7 +273,6 @@ namespace WateringOS_4_0.Interfaces
                     IsBusy = true; 
                     var vASa = new byte[2];
                     TWI_Ground.Read(vASa);
-                    //_Ground = (vASa[0] * 256) + vASa[1];
                     _Ground = ToInt16(vASa[0], vASa[1]);
                     
                     IsBusy = false;
