@@ -56,9 +56,9 @@ namespace WateringOS_4_0.Services
             var user = ApprovedUsers.FirstOrDefault(x => x.Fingerprint == fingerprint);
             if (user != null)
             {
-                ApprovedUsers.Remove(user);                
+                ApprovedUsers.Remove(user);
+                Logger.Post(Logger.USR, LogType.Information, "User " + fingerprint + " closed the session", "The user closed the session and was removed from user list");
             }
-            Logger.Post(Logger.USR, LogType.Information, "User " + fingerprint + " closed the session", "The user closed the session and was removed from user list");
         }
 
         public bool IsAuthorized(string fingerprint)

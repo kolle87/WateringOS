@@ -62,14 +62,14 @@ public class Watering
                     wt1++;
                     if (wt1 >= MaxWatTime)
                     {
-                        Logger.Post(Logger.WAT, LogType.Warning, "Watering 1 reached max time", "The watering procedure on line #1 reached the maximum time for watering and was aborted after " + wt1 + "sec");
+                        Logger.Post(Logger.WAT, LogType.Warning, $"Watering 1 reached max time ({wt1}sec)", "The watering procedure on line #1 reached the maximum time for watering and was aborted after " + wt1 + "sec");
                         break;
                     }
                 }
                 Interfaces.DIOInterface.StopPump();                                                 // Stop Pump
             });
             t_Water1.Wait();                                                                        // Check flow every second and wait for full volume watering
-            Logger.Post(Logger.WAT, LogType.Information, "Watering Plant 1 finished", "The watering procedure of Plant 1 ended after " + wt1 + "sec and " + Interfaces.SPIInterface.Flow1 + " ml");
+            Logger.Post(Logger.WAT, LogType.Information, $"Watering Plant 1 finished ({Interfaces.SPIInterface.Flow1})", "The watering procedure of Plant 1 ended after " + wt1 + "sec and " + Interfaces.SPIInterface.Flow1 + " ml");
             t_wait = Task.Run(async delegate { await Task.Delay(DlyAfterPumpStop); });
             t_wait.Wait();                                                                          // wait to depressurize
             Interfaces.DIOInterface.CloseValve1();                                                  // Close Valve #1
@@ -90,14 +90,14 @@ public class Watering
                     wt2++;
                     if (wt2 >= MaxWatTime)
                     {
-                        Logger.Post(Logger.WAT, LogType.Warning, "Watering 2 reached max time", "The watering procedure on line #2 reached the maximum time for watering and was aborted after " + wt2 + "sec");
+                        Logger.Post(Logger.WAT, LogType.Warning, $"Watering 2 reached max time ({wt2}sec)", "The watering procedure on line #2 reached the maximum time for watering and was aborted after " + wt2 + "sec");
                         break;
                     }
                 }
                 Interfaces.DIOInterface.StopPump();                                                 // Stop Pump
             });
             t_Water2.Wait();                                                                        // Check flow every second and wait for full volume watering
-            Logger.Post(Logger.WAT, LogType.Information, "Watering Plant 2 finished", "The watering procedure of Plant 2 ended after " + wt2 + "sec and " + Interfaces.SPIInterface.Flow2 + " ml");
+            Logger.Post(Logger.WAT, LogType.Information, $"Watering Plant 2 finished ({Interfaces.SPIInterface.Flow2}ml)", "The watering procedure of Plant 2 ended after " + wt2 + "sec and " + Interfaces.SPIInterface.Flow2 + " ml");
             t_wait = Task.Run(async delegate { await Task.Delay(DlyAfterPumpStop); });
             t_wait.Wait();                                                                          // wait to depressurize
             Interfaces.DIOInterface.CloseValve2();                                                  // Close Valve #2
@@ -118,14 +118,14 @@ public class Watering
                     wt3++;
                     if (wt3 >= MaxWatTime)
                     {
-                        Logger.Post(Logger.WAT, LogType.Warning, "Watering 3 reached max time", "The watering procedure on line #3 reached the maximum time for watering and was aborted after " + wt3 + "sec");
+                        Logger.Post(Logger.WAT, LogType.Warning, $"Watering 3 reached max time ({wt3}sec)", "The watering procedure on line #3 reached the maximum time for watering and was aborted after " + wt3 + "sec");
                         break;
                     }
                 }
                 Interfaces.DIOInterface.StopPump();                                                 // Stop Pump
             });
             t_Water3.Wait();                                                                        // Check flow every second and wait for full volume watering
-            Logger.Post(Logger.WAT, LogType.Information, "Watering Plant 3 finished", "The watering procedure of Plant 3 ended after " + wt3 + "sec and " + Interfaces.SPIInterface.Flow3 + " ml");
+            Logger.Post(Logger.WAT, LogType.Information, $"Watering Plant 3 finished ({Interfaces.SPIInterface.Flow3}ml)", "The watering procedure of Plant 3 ended after " + wt3 + "sec and " + Interfaces.SPIInterface.Flow3 + " ml");
             t_wait = Task.Run(async delegate { await Task.Delay(DlyAfterPumpStop); });
             t_wait.Wait();                                                                          // wait to depressurize
             Interfaces.DIOInterface.CloseValve3();                                                  // Close Valve #3
@@ -146,14 +146,14 @@ public class Watering
                     wt4++;
                     if (wt4 >= MaxWatTime)
                     {
-                        Logger.Post(Logger.WAT, LogType.Warning, "Watering 4 reached max time", "The watering procedure on line #4 reached the maximum time for watering and was aborted after " + wt4 + "sec");
+                        Logger.Post(Logger.WAT, LogType.Warning, $"Watering 4 reached max time ({wt4})", "The watering procedure on line #4 reached the maximum time for watering and was aborted after " + wt4 + "sec");
                         break;
                     }
                 }
                 Interfaces.DIOInterface.StopPump();                                                 // Stop Pump
             });
             t_Water4.Wait();                                                                        // Check flow every second and wait for full volume watering
-            Logger.Post(Logger.WAT, LogType.Information, "Watering Plant 4 finished", "The watering procedure of Plant 4 ended after " + wt4 + "sec and " + Interfaces.SPIInterface.Flow4 + " ml");
+            Logger.Post(Logger.WAT, LogType.Information, $"Watering Plant 4 finished ({Interfaces.SPIInterface.Flow4}ml)", "The watering procedure of Plant 4 ended after " + wt4 + "sec and " + Interfaces.SPIInterface.Flow4 + " ml");
             t_wait = Task.Run(async delegate { await Task.Delay(DlyAfterPumpStop); });
             t_wait.Wait();                                                                          // wait to depressurize
             Interfaces.DIOInterface.CloseValve4();                                                  // Close Valve #4
@@ -174,14 +174,14 @@ public class Watering
                     wt5++;
                     if (wt5 >= MaxWatTime)
                     {
-                        Logger.Post(Logger.WAT, LogType.Warning, "Watering 5 reached max time", "The watering procedure on line #5 reached the maximum time for watering and was aborted after " + wt5 + "sec");
+                        Logger.Post(Logger.WAT, LogType.Warning, $"Watering 5 reached max time ({wt5}sec)", "The watering procedure on line #5 reached the maximum time for watering and was aborted after " + wt5 + "sec");
                         break;
                     }
                 }
                 Interfaces.DIOInterface.StopPump();                                                 // Stop Pump
             });
             t_Water5.Wait();                                                                        // Check flow every second and wait for full volume watering
-            Logger.Post(Logger.WAT, LogType.Information, "Watering Plant 5 finished", "The watering procedure of Plant 5 ended after " + wt5 + "sec and " + Interfaces.SPIInterface.Flow5 + " ml");
+            Logger.Post(Logger.WAT, LogType.Information, $"Watering Plant 5 finished ({Interfaces.SPIInterface.Flow5}ml)", "The watering procedure of Plant 5 ended after " + wt5 + "sec and " + Interfaces.SPIInterface.Flow5 + " ml");
             t_wait = Task.Run(async delegate { await Task.Delay(DlyAfterPumpStop); });
             t_wait.Wait();                                                                          // wait to depressurize
             Interfaces.DIOInterface.CloseValve5();                                                  // Close Valve #5

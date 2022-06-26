@@ -25,10 +25,13 @@ namespace WateringOS_4_0.Services
             }
             public void Deactivate()
             {
-                this.IsActive = false;
-                ActiveAlarms.Remove(this);
-                OnAlarm?.Invoke(this);
-                //Logger.Post(Logger.SYS, LogType.Information, "ALARM DEACTIVATED - "+this.Name, this.Description);
+                if (this.IsActive)
+                { 
+                    this.IsActive = false;
+                    ActiveAlarms.Remove(this);
+                    OnAlarm?.Invoke(this);
+                    Logger.Post(Logger.SYS, LogType.Information, "ALARM DEACTIVATED - "+this.Name, this.Description);
+                }
             }
         }
        

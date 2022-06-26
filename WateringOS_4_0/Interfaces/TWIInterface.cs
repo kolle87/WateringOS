@@ -133,6 +133,9 @@ namespace WateringOS_4_0.Interfaces
         {
             if (IsInitialized)
             {
+
+                CheckSensorStatus();
+
                 ReadAmbientTemp(); Wait(100);
                 
                 ReadExposedTemp(); Wait(100);
@@ -140,8 +143,6 @@ namespace WateringOS_4_0.Interfaces
                 ReadGround(); Wait(100);
                 
                 ReadBoardTemp();
-
-                CheckSensorStatus();
             }
             else
             {
@@ -156,7 +157,7 @@ namespace WateringOS_4_0.Interfaces
                 if (IsBusy)
                 {
                     BoardTemperature.FailureCount++;
-                    Logger.Post(Logger.TWI, LogType.Warning, "ReadBoardTemp() - TWI busy", "ReadBoardTemp() - TWI busy");
+                    Logger.Post(Logger.TWI, LogType.Warning, $"ReadBoardTemp() - TWI busy ({BoardTemperature.FailureCount})", $"ReadBoardTemp() - TWI busy \n FailureCount: {BoardTemperature.FailureCount}");
                 }
                 else if (!BoardTemperature.Available)
                 {
@@ -179,8 +180,8 @@ namespace WateringOS_4_0.Interfaces
             }
             catch (Exception e)
             {
-                Logger.Post(Logger.TWI, LogType.Error, "Error reading Board temperature", e.Message);
                 BoardTemperature.FailureCount++;
+                Logger.Post(Logger.TWI, LogType.Error, $"Error reading Board temperature ({BoardTemperature.FailureCount})", e.Message);
             }
             BoardTemperature.Value = _BoardTemp;
         }
@@ -192,7 +193,7 @@ namespace WateringOS_4_0.Interfaces
                 if (IsBusy)
                 {
                     AmbientTemperature.FailureCount++;
-                    Logger.Post(Logger.TWI, LogType.Warning, "ReadAmbientTemp() - TWI busy", "ReadAmbientTemp() - TWI busy");
+                    Logger.Post(Logger.TWI, LogType.Warning, $"ReadAmbientTemp() - TWI busy ({AmbientTemperature.FailureCount})", $"ReadAmbientTemp() - TWI busy \n FailureCount: {AmbientTemperature.FailureCount}");
                 }
                 else if (!AmbientTemperature.Available)
                 {
@@ -214,8 +215,8 @@ namespace WateringOS_4_0.Interfaces
             }
             catch (Exception e)
             {
-                Logger.Post(Logger.TWI ,LogType.Error, "Error reading ambient temperature", e.Message);
                 AmbientTemperature.FailureCount++;
+                Logger.Post(Logger.TWI ,LogType.Error, $"Error reading ambient temperature ({AmbientTemperature.FailureCount})", e.Message);
             }
             AmbientTemperature.Value = _AmbientTemp;
         }
@@ -227,7 +228,7 @@ namespace WateringOS_4_0.Interfaces
                 if (IsBusy)
                 {
                     ExposedTemperature.FailureCount++;
-                    Logger.Post(Logger.TWI, LogType.Warning, "ReadExposedTemp() - TWI busy", "ReadExposedTemp() - TWI busy");
+                    Logger.Post(Logger.TWI, LogType.Warning, $"ReadExposedTemp() - TWI busy ({ExposedTemperature.FailureCount})", $"ReadExposedTemp() - TWI busy \n FailureCount: {ExposedTemperature.FailureCount}");
                 }
                 else if (!ExposedTemperature.Available)
                 {
@@ -249,8 +250,8 @@ namespace WateringOS_4_0.Interfaces
             }
             catch (Exception e)
             {
-                Logger.Post(Logger.TWI, LogType.Error, "Error reading exposed temperature", e.Message);
                 ExposedTemperature.FailureCount++;
+                Logger.Post(Logger.TWI, LogType.Error, $"Error reading exposed temperature ({ExposedTemperature.FailureCount})", e.Message);
             }
             ExposedTemperature.Value = _ExposedTemp;
         }
@@ -262,7 +263,7 @@ namespace WateringOS_4_0.Interfaces
                 if (IsBusy)
                 {
                     SoilMoisture.FailureCount++;
-                    Logger.Post(Logger.TWI, LogType.Warning, "ReadGround() - TWI busy", "ReadGround() - TWI busy");
+                    Logger.Post(Logger.TWI, LogType.Warning, $"ReadGround() - TWI busy ({SoilMoisture.FailureCount})", $"ReadGround() - TWI busy \n FailureCount: {SoilMoisture.FailureCount}");
                 }
                 else if (!SoilMoisture.Available)
                 {
@@ -282,8 +283,8 @@ namespace WateringOS_4_0.Interfaces
             }
             catch (Exception e)
             {
-                Logger.Post(Logger.TWI, LogType.Error, "Error reading ground sensor", e.Message);
                 SoilMoisture.FailureCount++;
+                Logger.Post(Logger.TWI, LogType.Error, $"Error reading ground sensor ({SoilMoisture.FailureCount})", e.Message);
             }
             SoilMoisture.Value = _Ground;
         }

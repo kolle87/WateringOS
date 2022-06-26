@@ -10,12 +10,12 @@
 <SfDialog Width="350px" Height="200px" Target="#main" IsModal="true" @bind-Visible="Visibility">
 	<DialogTemplates>
 		<Content>
-			<h5>Are you sure to reboot the System?</h5>
+			<h5>@Message</h5>
 		</Content>
 	</DialogTemplates>
 	<DialogButtons>
-		<DialogButton Content="Yes" OnClick="@DlgOkClick" />
-		<DialogButton Content="Cancel" IsPrimary="true" OnClick="@DlgCancelClick" />
+		<DialogButton Content="Yes" OnClick="@DlgOkClick" @bind-Disabled="ButtonDisabled" />
+		<DialogButton Content="Cancel" IsPrimary="true" OnClick="@DlgCancelClick" @bind-Disabled="ButtonDisabled" />
 	</DialogButtons>
 	<DialogAnimationSettings Effect="@DialogEffect.None"></DialogAnimationSettings>
 </SfDialog>
@@ -58,22 +58,29 @@
 
 @code{
 	private bool Visibility = false;
+	private bool ButtonDisabled = false;
+	private string Message = "Are you sure to reboot the System?";
 
 	public void Show()
 	{
 		this.Visibility = true;
+		this.ButtonDisabled = false;
+		this.Message = "Are you sure to reboot the System?";
 		StateHasChanged();
 	}
 
 	private void DlgOkClick()
 	{
-		// Do Reboot + don't hide, but show loading animation
-		this.Visibility = false;
+		// TODO: Do Reboot + don't hide, but show processing
+		this.Message = "System is rebooting. Please wait...";
+		this.ButtonDisabled = true;
+		StateHasChanged();
 	}
 
 	private void DlgCancelClick()
 	{	
 		this.Visibility = false;
+		this.ButtonDisabled = false;
 	}
 }
 
