@@ -17,6 +17,14 @@ namespace WateringOS_4_0
 				Globals.Interface.TWI.Read();
 			}
 			
+			// Sun Intensity functionality
+			EnvironmentService.CheckSunIntensity(RecentValues.TempAmb, RecentValues.TempExp);
+			if ((DateTime.Now.Hour == 1) && (DateTime.Now.Minute == 0) && (DateTime.Now.Second == 0))
+			{
+				EnvironmentService.ResetSunIntensityTime();
+				Logger.Post(Logger.SYS,LogType.Debug,"SunIntensityDuration was reset.", "SunIntensityDuration was reset.");
+			}
+
 			// Main task for watering
             #region Morning
             if ((DateTime.Now.Hour == Globals.Preferences.General.TimeMorning) && (DateTime.Now.Minute == 0) && (DateTime.Now.Second == 0))
@@ -124,6 +132,26 @@ namespace WateringOS_4_0
 									(Globals.Preferences.Plants[3].Sunday && Globals.Preferences.Plants[3].Noon) && (DateTime.Now.DayOfWeek == DayOfWeek.Sunday),
 									(Globals.Preferences.Plants[4].Sunday && Globals.Preferences.Plants[4].Noon) && (DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
 									);
+                // Cool down
+                // TODO: add time threshold as parameter
+                if (EnvironmentService.IntenseSunDuration.Minutes > 60)
+                {
+	                Logger.Post(Logger.WAT, LogType.Information, 
+						String.Format("Cool down function triggered ({0:F1})",EnvironmentService.IntenseSunDuration.TotalMinutes),
+						 String.Format("The cool down at high sun intensity was triggered.\n" +
+						               "Intense sun duration: {0}hrs:{1}min:{2}sec \n \n" +
+						               "{3}: {4}\n" +
+						               "{5}: {6}\n" +
+						               "{7}: {8}\n" +
+						               "{9}: {10}\n" +
+						               "{11}: {12}\n",
+										EnvironmentService.IntenseSunDuration.Hours,EnvironmentService.IntenseSunDuration.Minutes,EnvironmentService.IntenseSunDuration.Seconds,
+										Globals.Preferences.Plants[0].Name,Globals.Preferences.Plants[0].Cooling,
+										Globals.Preferences.Plants[1].Name,Globals.Preferences.Plants[1].Cooling,
+										Globals.Preferences.Plants[2].Name,Globals.Preferences.Plants[2].Cooling,
+										Globals.Preferences.Plants[3].Name,Globals.Preferences.Plants[3].Cooling,
+										Globals.Preferences.Plants[4].Name,Globals.Preferences.Plants[4].Cooling));
+                }
             }
             #endregion Noon
             #region Evening

@@ -12,8 +12,11 @@ namespace WateringOS_4_0.Services
 {
     public class EnvironmentService
     {
+        public static TimeSpan IntenseSunDuration { get; private set; } = new TimeSpan(0);
+        public static double IntenseSunDelta { get; private set; } = 0.0;
+        public static bool IntenseSun { get; private set; } = false;
         public static ObservableCollection<EnvironmentModel> EnvironmentLog = new();
-
+        
         public static void LoadEnvironmentLog()
         {
             EnvironmentLog = JsonConvert.DeserializeObject<ObservableCollection<EnvironmentModel>>(File.ReadAllText(@"usrdata/SavedLogs/EnvironmentLog.json"));
@@ -25,6 +28,22 @@ namespace WateringOS_4_0.Services
         public static async  Task CleanEnvironmentLog()
         {
             while (EnvironmentLog.Count > 10080) { EnvironmentLog.RemoveAt(0); }
-        }  
+        }
+
+        public static void CheckSunIntensity(double TempAmb, double TempExp)
+        {
+            IntenseSunDelta = TempExp - TempAmb;
+            if (IntenseSunDelta > 7.5) { IntenseSun = true; } 
+            if (IntenseSunDelta < 5.0) { IntenseSun = false; }
+
+            if (IntenseSun)
+            {
+                IntenseSunDuration = IntenseSunDuration.Add(TimeSpan.FromMilliseconds(Globals.ParameterValue("Task_Cycle",1000)));
+            }
+        }
+        public static void ResetSunIntensityTime()
+        {
+            IntenseSunDuration = TimeSpan.Zero;
+        }
     }
 }

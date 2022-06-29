@@ -39,6 +39,8 @@ namespace WateringOS_4_0.Services
         private static readonly Gauge BoardTemperature   = Metrics.CreateGauge("watering_env_temppcb", "Board Temperature", GaugeSuppressInitialValue);
         private static readonly Gauge Rain               = Metrics.CreateGauge("watering_env_rain", "Rain Sensor", GaugeSuppressInitialValue);
         private static readonly Gauge Ground             = Metrics.CreateGauge("watering_env_ground", "Soil Moisture Sensor", GaugeSuppressInitialValue);
+        private static readonly Gauge IntenseSun         = Metrics.CreateGauge("watering_env_sunintense", "Sun Intensity", GaugeSuppressInitialValue);
+        private static readonly Gauge IntenseSunDuration = Metrics.CreateGauge("watering_env_sunintense_dur", "Sun Intensity Duration sec", GaugeSuppressInitialValue);
         private static readonly Gauge GroundGardena      = Metrics.CreateGauge("watering_env_ground_gardena", "Soil Moisture Sensor (Reference from Gardena)", GaugeSuppressInitialValue);
 
         private static readonly Gauge CPUTemperature = Metrics.CreateGauge("watering_sys_tempcpu", "CPU Temperature", GaugeSuppressInitialValue);
@@ -73,6 +75,8 @@ namespace WateringOS_4_0.Services
             BoardTemperature.Set(RecentValues.TempPCB);
             Rain.Set(RecentValues.Rain);
             Ground.Set(RecentValues.Ground);
+            IntenseSun.Set(EnvironmentService.IntenseSun ? 1 : 0);
+            IntenseSunDuration.Set(EnvironmentService.IntenseSunDuration.TotalSeconds);
             GroundGardena.Set(Interfaces.SPIInterface.Ground);
 
             CPUTemperature.Set(RecentValues.TempCPU);

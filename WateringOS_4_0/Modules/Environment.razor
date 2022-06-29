@@ -3,6 +3,7 @@
 @implements IDisposable
 
 @using WateringOS_4_0.Models
+@using WateringOS_4_0.Services
 
 <div class="control-section" style="padding-left:20px">
 
@@ -21,7 +22,8 @@
         <div class="col-auto env" ><span class="text" id="stat_tank">@Interfaces.SPIInterface.LevelRaw</span></div>
     </div>
     <div class="row">
-        <div class="col-12"><p></p></div>
+        <div class="col-fixed env">IntenseSun:</div>
+        <div class="col-auto env" ><span class="text" id="stat_SunDuration"> @String.Format("{0:F1}°C",EnvironmentService.IntenseSunDelta) / @String.Format("{0:F1}hrs", EnvironmentService.IntenseSunDuration.TotalHours) @String.Format("({0})",EnvironmentService.IntenseSun).ToLower()</span></div>
     </div>
 
 </div>
