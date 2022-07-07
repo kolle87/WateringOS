@@ -32,10 +32,12 @@ namespace WateringOS_4_0.Interfaces
 
         public void Initialize()
         {
+            if (IsInitialized) {return; }
             Logger.Post(Logger.TWI, LogType.Information, "Start initialization", "The initialization of the TWI communication class has started.");
             try
             {
                 int FailCount = 0;
+                
                 // Initialize Board Temperature Sensor (DS1621)
                 try
                 {
@@ -146,7 +148,7 @@ namespace WateringOS_4_0.Interfaces
             }
             else
             {
-                Logger.Post(Logger.TWI, LogType.Error, "TWIRead() - Controller not initialized", "TWI Interface is not ready to read.");
+                //Logger.Post(Logger.TWI, LogType.Error, "TWIRead() - Controller not initialized", "TWI Interface is not ready to read.");
             }
         }
         private void ReadBoardTemp()
@@ -174,7 +176,7 @@ namespace WateringOS_4_0.Interfaces
                     _BoardTemp = ConvertTemperature(vASa[0], vASa[1]);
                     
                     IsBusy = false;
-                    BoardTemperature.FailureCount--;
+                    BoardTemperature.FailureCount = 0;
                     BoardTemperature.Available = true;
                 }                
             }
@@ -209,7 +211,7 @@ namespace WateringOS_4_0.Interfaces
                     _AmbientTemp = ConvertTemperature(vASa[0], vASa[1]);
                     
                     IsBusy = false;
-                    AmbientTemperature.FailureCount--;
+                    AmbientTemperature.FailureCount = 0;
                     AmbientTemperature.Available = true;
                 }                
             }
@@ -244,7 +246,7 @@ namespace WateringOS_4_0.Interfaces
                     _ExposedTemp = ConvertTemperature(vASa[0], vASa[1]);
 
                     IsBusy = false;
-                    ExposedTemperature.FailureCount--;
+                    ExposedTemperature.FailureCount = 0;
                     ExposedTemperature.Available = true;
                 }                
             }
@@ -277,7 +279,7 @@ namespace WateringOS_4_0.Interfaces
                     _Ground = ToInt16(vASa[0], vASa[1]);
                     
                     IsBusy = false;
-                    SoilMoisture.FailureCount--;
+                    SoilMoisture.FailureCount = 0;
                     SoilMoisture.Available = true;
                 }
             }

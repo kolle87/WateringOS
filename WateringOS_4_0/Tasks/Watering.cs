@@ -69,7 +69,7 @@ public class Watering
                 Interfaces.DIOInterface.StopPump();                                                 // Stop Pump
             });
             t_Water1.Wait();                                                                        // Check flow every second and wait for full volume watering
-            Logger.Post(Logger.WAT, LogType.Information, $"Watering Plant 1 finished ({Interfaces.SPIInterface.Flow1})", "The watering procedure of Plant 1 ended after " + wt1 + "sec and " + Interfaces.SPIInterface.Flow1 + " ml");
+            Logger.Post(Logger.WAT, LogType.Information, $"Watering Plant 1 finished ({Interfaces.SPIInterface.Flow1}ml)", "The watering procedure of Plant 1 ended after " + wt1 + "sec and " + Interfaces.SPIInterface.Flow1 + " ml");
             t_wait = Task.Run(async delegate { await Task.Delay(DlyAfterPumpStop); });
             t_wait.Wait();                                                                          // wait to depressurize
             Interfaces.DIOInterface.CloseValve1();                                                  // Close Valve #1

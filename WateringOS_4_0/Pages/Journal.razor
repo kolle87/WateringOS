@@ -93,18 +93,19 @@
                     @{
                         var currentLog = (context as LogModel);
                         Count++;
-                        <SfTooltip Target="#txt" @key="@Count" MouseTrail="true">
+                        <SfTooltip Target="#txt" @key="@Count" MouseTrail="true" CssClass="e-tooltip-journal" ShowTipPointer="false">
                             <TooltipTemplates>
                                 <Content>
-                                    <h5>@currentLog.TimeStamp</h5>
-                                    <h6>@currentLog.Type : @currentLog.Message</h6>
-                                    <p>@currentLog.Details</p>
+                                    <div class="journal-tooltip">
+                                       <h6>@currentLog.TimeStamp</h6>
+                                       <h6>@currentLog.Type : @currentLog.Message</h6>
+                                       <div class="journal-tt-description">@currentLog.Details</div> 
+                                    </div>
                                 </Content>
                             </TooltipTemplates>
                             <div id="txt" style="width: 100%">
                                 @currentLog.Message
                             </div>
-
                         </SfTooltip>
                     }
                 </Template>
@@ -137,6 +138,15 @@
     .e-grid .e-icons {
         color: #495057;
         display: none;
+    }
+    
+    .e-tooltip-wrap {
+        background-color: whitesmoke;
+        border-radius: 5px;
+    }
+    
+    .journal-tooltip {
+        color: black;
     }
 </style>
 

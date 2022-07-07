@@ -134,7 +134,7 @@ namespace WateringOS_4_0
 									);
                 // Cool down
                 // TODO: add time threshold as parameter
-                if (EnvironmentService.IntenseSunDuration.Minutes > 60)
+                if (EnvironmentService.IntenseSunDuration.TotalMinutes > Globals.ParameterValue("SunIntense_Threshold",120))
                 {
 	                Logger.Post(Logger.WAT, LogType.Information, 
 						String.Format("Cool down function triggered ({0:F1})",EnvironmentService.IntenseSunDuration.TotalMinutes),

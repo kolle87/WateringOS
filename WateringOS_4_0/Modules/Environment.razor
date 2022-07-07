@@ -4,9 +4,13 @@
 
 @using WateringOS_4_0.Models
 @using WateringOS_4_0.Services
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Notifications
 
 <div class="control-section" style="padding-left:20px">
-
+    <SfToast ID="toast_sunfeedback" @ref="SunFeedbackToast" Title="Feedback saved..." Timeout="2000" CssClass="e-toast-success" Icon="e-icons e-check">
+        <ToastPosition X="Right" Y="Top"></ToastPosition>
+    </SfToast>
     <h5>Enviromental</h5>
 
     <div class="row">
@@ -25,7 +29,13 @@
         <div class="col-fixed env">IntenseSun:</div>
         <div class="col-auto env" ><span class="text" id="stat_SunDuration"> @String.Format("{0:F1}°C",EnvironmentService.IntenseSunDelta) / @String.Format("{0:F1}hrs", EnvironmentService.IntenseSunDuration.TotalHours) @String.Format("({0})",EnvironmentService.IntenseSun).ToLower()</span></div>
     </div>
-
+    <div class="row">
+        <div class="col-fixed env">Manual Record:</div>
+        <div class="col-auto env">
+            <div class="container" @onclick="RecordSunIsIntense"  id="btn_intense" style="cursor: pointer;border-radius:10px;background-color: forestgreen ;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Intense</span></div>
+            <div class="container" @onclick="RecordSunNotIntense" id="btn_notintense" style="cursor: pointer;border-radius:10px;background-color: crimson ;margin:7px 0px 7px 0px;text-align:center"> <span class="text" style="color:whitesmoke">Weak</span></div>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -42,6 +52,8 @@
 </style>
 
 @code {
+    SfToast SunFeedbackToast;
+
     protected override async Task OnInitializedAsync()
     {
         await Task.Run(delegate { Globals.GUI.HasChanged_slow += Update; });
@@ -51,6 +63,16 @@
         InvokeAsync(() => StateHasChanged());
     }
 
+    private void RecordSunIsIntense()
+    {
+        EnvironmentService.RecordSunIntense(true);
+        SunFeedbackToast.ShowAsync();
+    }
+    private void RecordSunNotIntense()
+    {
+        EnvironmentService.RecordSunIntense(false);
+        SunFeedbackToast.ShowAsync();
+    }
     public void Dispose()
     {
         Globals.GUI.HasChanged_slow -= Update;

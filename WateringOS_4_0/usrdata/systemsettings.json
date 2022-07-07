@@ -121,6 +121,39 @@
     "Step": 1
   },
   {
+    "Name": "SunIntense_On",
+    "Group": "Calibration",
+    "Value": 10,
+    "Default": 10,
+    "Unit": "°C",
+    "Scale": 1,
+    "Min": 0,
+    "Max": 50,
+    "Step": 1
+  },
+  {
+    "Name": "SunIntense_Off",
+    "Group": "Calibration",
+    "Value": 8,
+    "Default": 8,
+    "Unit": "int",
+    "Scale": 1,
+    "Min": 0,
+    "Max": 50,
+    "Step": 1
+  },
+  {
+    "Name": "SunIntense_Threshold",
+    "Group": "Calibration",
+    "Value": 120,
+    "Default": 120,
+    "Unit": "min",
+    "Scale": 1,
+    "Min": 10,
+    "Max": 1000,
+    "Step": 1
+  },
+  {
     "Name": "Wat_min_tank",
     "Group": "Watering",
     "Value": 3,

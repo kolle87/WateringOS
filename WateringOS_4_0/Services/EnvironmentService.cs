@@ -33,8 +33,8 @@ namespace WateringOS_4_0.Services
         public static void CheckSunIntensity(double TempAmb, double TempExp)
         {
             IntenseSunDelta = TempExp - TempAmb;
-            if (IntenseSunDelta > 7.5) { IntenseSun = true; } 
-            if (IntenseSunDelta < 5.0) { IntenseSun = false; }
+            if (IntenseSunDelta > Globals.ParameterValue("SunIntense_On",10)) { IntenseSun = true; } 
+            if (IntenseSunDelta < Globals.ParameterValue("SunIntense_Off",8)) { IntenseSun = false; }
 
             if (IntenseSun)
             {
@@ -44,6 +44,20 @@ namespace WateringOS_4_0.Services
         public static void ResetSunIntensityTime()
         {
             IntenseSunDuration = TimeSpan.Zero;
+        }
+
+        public static void RecordSunIntense(bool IsIntense)
+        {
+            string FileName = "usrdata/SunIntense.csv";
+            string record = String.Format("{0},{1},{2},{3},{4}\n",DateTime.Now,RecentValues.TempAmb,RecentValues.TempExp,(RecentValues.TempExp-RecentValues.TempAmb),IsIntense);
+
+            if (!File.Exists(FileName))
+            {
+                string header = "Timestamp,TempAmb,TempExp,TempDiff,IsIntense\n";
+                File.WriteAllText(FileName, header);
+            }
+
+            File.AppendAllText(FileName, record);
         }
     }
 }

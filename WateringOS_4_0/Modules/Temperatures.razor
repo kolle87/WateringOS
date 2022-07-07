@@ -24,7 +24,9 @@
         <div class="col-auto temp" ><span class="text" id="stat_CPU">@String.Format("{0:F1}°C", RecentValues.TempCPU)</span></div>
     </div>
     <div class="row">
-        <div class="col-12"><p></p></div>
+        <div class="col-12">
+            <div class="container" @onclick="Globals.Interface.TWI.Initialize"  id="btn_intense" style="cursor: pointer;border-radius:10px;background-color: gold ;margin:7px 0px 7px 0px;text-align:center"><span class="text" style="color:whitesmoke">Re-Initialize TWI</span></div>
+        </div>
     </div>
 
 </div>
